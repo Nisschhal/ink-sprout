@@ -12,6 +12,11 @@
 ## Technologies Used
 
 - **Frontend**: Next.js, TailwindCSS
+  - **React Icons**
+  - **React Hook Form**
+   - 
+  - **@hookform/resolvers**: to pass the form data to zod for validation
+  - **Zod**: for form Validation schemas
 - **Backend**: Node.js, Express
 - **Database**: MongoDB with Mongoose
 - **Payment Processing**: Stripe
