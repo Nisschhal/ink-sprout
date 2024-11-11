@@ -10,15 +10,17 @@ export default async function NavBar() {
   return (
     <header className="py-8">
       <nav>
-        <ul className="flex justify-between gap-3">
-          <li className="w-max-2xl overflow-hidden">
-            <Logo />
+        <ul className="flex justify-between gap-3 items-center py-3">
+          <li className=" ">
+            <Link href={"/"} aria-label="ink sprout logo">
+              <Logo />
+            </Link>
           </li>
           <li className="ml-auto">Home</li>
           {!session ? (
             <li>
               <Button variant={"ghost"} asChild>
-                <Link href={"/api/auth/signin"}>
+                <Link href={"/auth/login"}>
                   <LogIn /> <span>Login</span>
                 </Link>
               </Button>
