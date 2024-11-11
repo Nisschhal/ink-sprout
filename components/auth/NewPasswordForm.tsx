@@ -11,23 +11,26 @@ import {
 } from "../ui/form";
 import { AuthCard } from "./AuthCard";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema } from "@/types/login-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useAction } from "next-safe-action/hooks";
-import { emailSignIn } from "@/server/actions/email-signin";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { FormSuccess } from "./FormSuccess";
 import { FormError } from "./FormError";
+import { NewPasswordSchema } from "@/types/new-password-schema";
+import { newPassword } from "@/server/actions/new-password";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginForm() {
+export default function NewPasswordForm() {
+  const router = useRouter();
+  const token = useSearchParams().get("token");
   // Form State initialized with validation from zod and schema
-  const form = useForm({
-    resolver: zodResolver(LoginSchema),
-    defaultValues: { email: "", password: "" },
+  const form = useForm<z.infer<typeof NewPasswordSchema>>({
+    resolver: zodResolver(NewPasswordSchema),
+    defaultValues: { password: "" },
   });
 
   // Error Status
@@ -36,22 +39,25 @@ export default function LoginForm() {
 
   // Server action using 'next-safe-action'
   // extract the execute function and form submit status
-  const { execute,  isExecuting } = useAction(emailSignIn, {
+  const { execute, isExecuting } = useAction(newPassword, {
     onSuccess({ data }) {
       console.log(data);
       if (data?.error) setError(data.error);
-      if (data?.success) setSuccess(data.success);
+      if (data?.success) {
+        setSuccess(data.success);
+        router.push("/auth/login");
+      }
     },
   });
 
   // When form submited invoke execute server function
-  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    execute(data);
+  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
+    execute({ password: values.password, token });
   };
 
   return (
     <AuthCard
-      cardTitle="Welcome back!"
+      cardTitle="Enter a new password!"
       backButtonHref="/auth/register"
       backButtonLabel="Create a new account"
       showSocials
@@ -61,37 +67,17 @@ export default function LoginForm() {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             {/* Form Fields */}
             <div className="space-y-5">
-              {/* Email */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        autoComplete="email"
-                        placeholder="youremail@gmail.com"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               {/* // Password */}
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>New Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Your password here..."
+                        placeholder="Your new password here..."
                         autoComplete="current-password"
                         {...field}
                       />
@@ -113,10 +99,11 @@ export default function LoginForm() {
             <Button type="submit" className="w-full my-2">
               {isExecuting ? (
                 <>
-                  <Loader2 className="animate-spin size-3.5" /> Loggin in...
+                  <Loader2 className="animate-spin size-3.5" /> Updating new
+                  password..
                 </>
               ) : (
-                "Login"
+                "Reset Password"
               )}
             </Button>
           </form>

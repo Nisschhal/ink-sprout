@@ -2,13 +2,25 @@
 
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import { emailTokens, users } from "../schema";
+import { emailTokens, passwordResetTokens, users } from "../schema";
 
-// check if token already exist
+// check if token already exist by email
 const getVerificationTokenByEmail = async (email: string) => {
   try {
     const verificationToken = await db.query.emailTokens.findFirst({
       where: eq(emailTokens.token, email),
+    });
+    return verificationToken;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return null;
+  }
+};
+// check if token already exist by token
+const getVerificationTokenByToken = async (token: string) => {
+  try {
+    const verificationToken = await db.query.emailTokens.findFirst({
+      where: eq(emailTokens.token, token),
     });
     return verificationToken;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,7 +62,7 @@ export const generateEmailVerificationToken = async (email: string) => {
 export const verifyEmail = async (token: string) => {
   // check if token already exist as email and token is index in getVerificationTokenByEmail so either token or email works as argument
 
-  const existingToken = await getVerificationTokenByEmail(token);
+  const existingToken = await getVerificationTokenByToken(token);
   // if no token return error
   if (!existingToken) return { error: "Token not found!" };
 
@@ -75,4 +87,59 @@ export const verifyEmail = async (token: string) => {
   // delete the existing emailToken as user is verified with that token
   await db.delete(emailTokens).where(eq(emailTokens.id, existingToken.id));
   return { success: "Email verified!" };
+};
+
+// get password reset token by toke from db
+export const getPasswordResetTokenByToken = async (token: string) => {
+  try {
+    const passwordResetToken = await db.query.passwordResetTokens.findFirst({
+      where: eq(passwordResetTokens.token, token),
+    });
+
+    return passwordResetToken;
+  } catch (error) {
+    console.log("error while getting password reset token by token", error);
+  }
+};
+// get password reset token by email from db
+export const getPasswordResetTokenByEmail = async (email: string) => {
+  try {
+    const passwordResetToken = await db.query.passwordResetTokens.findFirst({
+      where: eq(passwordResetTokens.email, email),
+    });
+
+    return passwordResetToken;
+  } catch (error) {
+    console.log("error while getting password reset token by email", error);
+  }
+};
+
+// generate password reset token
+export const generatePasswordResetToken = async (email: string) => {
+  try {
+    const token = crypto.randomUUID();
+    // set expiries
+    const expires = new Date(new Date().getTime() + 3600 * 1000); // 1 hour time limit
+
+    const existingToken = await getPasswordResetTokenByEmail(email);
+
+    if (existingToken) {
+      await db
+        .delete(passwordResetTokens)
+        .where(eq(passwordResetTokens.id, existingToken.id));
+    }
+
+    const passwordResetToken = await db
+      .insert(passwordResetTokens)
+      .values({
+        email,
+        token,
+        expires,
+      })
+      .returning();
+
+    return passwordResetToken;
+  } catch (error) {
+    console.log("Error while generting password reset token", error);
+  }
 };

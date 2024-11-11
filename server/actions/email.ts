@@ -35,3 +35,32 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     return;
   }
 };
+// function to send reset email
+export const sendPasswordResetEmail = async (email: string, token: string) => {
+  // get the host domain name
+  const domain = getBaseURL();
+
+  // create a hyperlink for email to redirect for verify token
+  const confirmLink = `${domain}/auth/new-password?token=${token}`;
+
+  // send the email with the hyperlink
+  const { data, error } = await resend.emails.send({
+    from: "onboarding@resend.dev",
+    to: email,
+    subject: "Reset password, from ink sprout",
+    html: `<p style="font-size: 14px; color: black;">Click to <a href="${confirmLink}" style="color: blue; text-decoration: underline;">Reset your Password</a></p>
+`,
+  });
+
+  // if some error while sending email
+  if (error) {
+    console.log("error while sending reset email", error);
+    return;
+  }
+
+  // if email sent succesfully
+  if (data) {
+    console.log("reset email sent successfully", data);
+    return;
+  }
+};

@@ -58,3 +58,37 @@ export const emailTokens = pgTable(
     }),
   })
 );
+
+export const passwordResetTokens = pgTable(
+  "password_reset_tokens",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+    email: text("email").notNull(),
+  },
+  (resetToken) => ({
+    compositePk: primaryKey({
+      columns: [resetToken.id, resetToken.token],
+    }),
+  })
+);
+
+export const twoFactorTokens = pgTable(
+  "two_factor_tokens",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+    email: text("email").notNull(),
+  },
+  (twoFactorTokens) => ({
+    compositePk: primaryKey({
+      columns: [twoFactorTokens.id, twoFactorTokens.token],
+    }),
+  })
+);

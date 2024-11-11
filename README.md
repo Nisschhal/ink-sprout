@@ -17,6 +17,8 @@
   - **@hookform/resolvers**: to pass the form data to zod for validation
   - **Zod**: for form Validation schemas
 - **Backend**:
+  - **Drizzle with PostgreSQL**: for database
+  - **NeonDb**: for serveless db
   - **Next Safe Action**: for
   - **Bcrypt**: To hash register password
   - **Resend**: For EmailVerification and its stuff.

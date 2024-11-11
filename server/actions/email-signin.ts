@@ -43,7 +43,7 @@ export const emailSignIn = action
       }
 
       // If USER VERFIEID
-      // Call signIn from the server/auth for custom 'credentials' email/passowrd
+      // Call signIn from the `server/auth` for custom 'credentials' email/passowrd
       await signIn("credentials", {
         email,
         password,
@@ -67,5 +67,4 @@ export const emailSignIn = action
       // Handle errors other than AuthError
       throw error;
     }
-    console.log(email, password);
   });

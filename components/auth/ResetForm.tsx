@@ -11,23 +11,23 @@ import {
 } from "../ui/form";
 import { AuthCard } from "./AuthCard";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema } from "@/types/login-schema";
 import * as z from "zod";
 import { Input } from "../ui/input";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useAction } from "next-safe-action/hooks";
-import { emailSignIn } from "@/server/actions/email-signin";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { FormSuccess } from "./FormSuccess";
 import { FormError } from "./FormError";
+import { ResetSchema } from "@/types/reset-schema";
+import { reset } from "@/server/actions/reset-password";
 
-export default function LoginForm() {
+export default function ResetForm() {
   // Form State initialized with validation from zod and schema
-  const form = useForm({
-    resolver: zodResolver(LoginSchema),
-    defaultValues: { email: "", password: "" },
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
+    defaultValues: { email: "" },
   });
 
   // Error Status
@@ -36,7 +36,7 @@ export default function LoginForm() {
 
   // Server action using 'next-safe-action'
   // extract the execute function and form submit status
-  const { execute,  isExecuting } = useAction(emailSignIn, {
+  const { execute, isExecuting } = useAction(reset, {
     onSuccess({ data }) {
       console.log(data);
       if (data?.error) setError(data.error);
@@ -45,13 +45,13 @@ export default function LoginForm() {
   });
 
   // When form submited invoke execute server function
-  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    execute(data);
+  const onSubmit = (values: z.infer<typeof ResetSchema>) => {
+    execute(values);
   };
 
   return (
     <AuthCard
-      cardTitle="Welcome back!"
+      cardTitle="Forgot your password?"
       backButtonHref="/auth/register"
       backButtonLabel="Create a new account"
       showSocials
@@ -61,38 +61,19 @@ export default function LoginForm() {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             {/* Form Fields */}
             <div className="space-y-5">
-              {/* Email */}
+              {/* // Password */}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        autoComplete="email"
-                        placeholder="youremail@gmail.com"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* // Password */}
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <Input
-                        type="password"
-                        placeholder="Your password here..."
-                        autoComplete="current-password"
+                        type="email"
+                        placeholder="email@gmail.com"
+                        disabled={isExecuting}
+                        autoComplete="email"
                         {...field}
                       />
                     </FormControl>
@@ -113,10 +94,11 @@ export default function LoginForm() {
             <Button type="submit" className="w-full my-2">
               {isExecuting ? (
                 <>
-                  <Loader2 className="animate-spin size-3.5" /> Loggin in...
+                  <Loader2 className="animate-spin size-3.5" /> Sending Reset
+                  Link...
                 </>
               ) : (
-                "Login"
+                "Reset Password"
               )}
             </Button>
           </form>
