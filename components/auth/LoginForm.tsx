@@ -20,6 +20,8 @@ import { useAction } from "next-safe-action/hooks";
 import { emailSignIn } from "@/server/actions/email-signin";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { FormSuccess } from "./FormSuccess";
+import { FormError } from "./FormError";
 
 export default function LoginForm() {
   // Form State initialized with validation from zod and schema
@@ -30,12 +32,15 @@ export default function LoginForm() {
 
   // Error Status
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   // Server action using 'next-safe-action'
   // extract the execute function and form submit status
   const { execute, status, isExecuting } = useAction(emailSignIn, {
-    onSuccess(data) {
+    onSuccess({ data }) {
       console.log(data);
+      if (data?.error) setError(data.error);
+      if (data?.success) setSuccess(data.success);
     },
   });
 
@@ -100,7 +105,10 @@ export default function LoginForm() {
               <Button variant={"link"} size={"sm"}>
                 <Link href="/auth/reset">Forgot your password?</Link>
               </Button>
+              <FormSuccess message={success} />
+              <FormError message={error} />
             </div>
+
             {/* Submit Button */}
             <Button type="submit" className="w-full my-2">
               {isExecuting ? (
