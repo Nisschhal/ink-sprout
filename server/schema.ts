@@ -12,6 +12,7 @@ export const users = pgTable("user", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
+  password: text("password").notNull(),
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
@@ -37,6 +38,23 @@ export const accounts = pgTable(
   (account) => ({
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
+    }),
+  })
+);
+
+export const emailTokens = pgTable(
+  "email_tokens",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+    email: text("email").notNull(),
+  },
+  (verificationToken) => ({
+    compositePk: primaryKey({
+      columns: [verificationToken.id, verificationToken.token],
     }),
   })
 );

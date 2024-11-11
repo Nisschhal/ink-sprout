@@ -14,11 +14,13 @@
 - **Frontend**: Next.js, TailwindCSS
   - **React Icons**
   - **React Hook Form**
-   - 
   - **@hookform/resolvers**: to pass the form data to zod for validation
   - **Zod**: for form Validation schemas
-- **Backend**: Node.js, Express
-- **Database**: MongoDB with Mongoose
+- **Backend**:
+  - **Next Safe Action**: for
+  - **Bcrypt**: To hash register password
+  - **Resend**: For EmailVerification and its stuff.
+- **Database**: PostgreSQL with Drizzle and Neondb server
 - **Payment Processing**: Stripe
 - **State Management**: Redux (or Context API)
 - **Deployment**: Vercel for frontend, Heroku for backend (or choose based on preference)
