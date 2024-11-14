@@ -12,18 +12,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
-import {
-  DollarSign,
-  LogOut,
-  Moon,
-  Settings,
-  SubscriptIcon,
-  Sun,
-  TruckIcon,
-} from "lucide-react";
-import { FaMoneyBill, FaMoneyCheck } from "react-icons/fa";
+import { LogOut, Moon, Settings, Sun, TruckIcon } from "lucide-react";
+
+// import theme hook from 'next-themes'
+
+import { useTheme } from "next-themes";
+import { useState } from "react";
+import { Switch } from "../ui/switch";
 
 export function UserButton({ user }: Session) {
+  // extract theme and setter function from hook
+  const { setTheme, theme } = useTheme();
+  // state to see if dark is on
+  const [darkOn, setDarkOn] = useState(false);
+
+  // function with switch to toogle between dark, light, or system
+
+  function setSwitchState() {
+    switch (theme) {
+      case "dark": {
+        return setDarkOn(true);
+      }
+      case "light": {
+        return setDarkOn(false);
+      }
+      case "system": {
+        return setDarkOn(false);
+      }
+    }
+  }
+
   return (
     <div>
       <DropdownMenu modal={false}>
@@ -59,7 +77,7 @@ export function UserButton({ user }: Session) {
           <DropdownMenuItem className="group py-2 cursor-pointer font-medium ">
             <TruckIcon
               size={14}
-              className="mr-2 group-hover:translate-x-2 transition-all duration-200"
+              className="mr-2 group-hover:translate-x-2 transition-all duration-200 ease-in-out"
             />
             My Orders
           </DropdownMenuItem>
@@ -67,17 +85,42 @@ export function UserButton({ user }: Session) {
           <DropdownMenuItem className="group py-2 cursor-pointer font-medium ">
             <Settings
               size={14}
-              className="mr-2 group-hover:rotate-180 transition-all duration-200"
-            />{" "}
+              className="mr-2 group-hover:rotate-180 transition-all duration-200 ease-in-out"
+            />
             Settings
           </DropdownMenuItem>
-          <DropdownMenuItem className="group py-2 cursor-pointer font-medium ">
-            <div className="flex items-center">
-              <Sun size={14} />
-              <Moon size={14} />
-              Theme
-            </div>
-          </DropdownMenuItem>
+          {theme && (
+            <DropdownMenuItem className="group py-2 cursor-pointer font-medium ">
+              <div
+                className="flex items-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="relative flex mr-3">
+                  <Sun
+                    size={14}
+                    className="absolute group-hover:text-yellow-600  group-hover:rotate-180 transition-all duration-200 ease-in-out dark:scale-0 dark:-rotate-90"
+                  />
+                  <Moon
+                    size={14}
+                    className="group-hover:text-blue-400 scale-0 dark:scale-100  transition-all duration-200 ease-in-out "
+                  />
+                </div>
+                <p className="dark:text-blue-400 text-secondary-foreground/75 text-sm font-bold text-yellow-600 mr-3">
+                  {theme[0].toUpperCase() + theme.slice(1)} Mode
+                </p>
+                <Switch
+                  checked={darkOn}
+                  onCheckedChange={(value) => {
+                    setDarkOn((prev) => !prev);
+                    // if checked set them to dark
+                    if (value) setTheme("dark");
+                    // if not then to light
+                    if (!value) setTheme("light");
+                  }}
+                ></Switch>
+              </div>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="group py-2 cursor-pointer focus:bg-destructive/20"
             onClick={() => signOut()}
