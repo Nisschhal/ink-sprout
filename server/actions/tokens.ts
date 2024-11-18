@@ -2,8 +2,13 @@
 
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import { emailTokens, passwordResetTokens, users } from "../schema";
-
+import {
+  emailTokens,
+  passwordResetTokens,
+  twoFactorTokens,
+  users,
+} from "../schema";
+import crypto from "crypto";
 // check if token already exist by email
 const getVerificationTokenByEmail = async (email: string) => {
   try {
@@ -141,5 +146,65 @@ export const generatePasswordResetToken = async (email: string) => {
     return passwordResetToken;
   } catch (error) {
     console.log("Error while generting password reset token", error);
+  }
+};
+
+// ----------------- TWO FACTOR TOKENS ------------------------ //
+
+// GET
+// get the twofactor token row from the db via given email
+export const getTwoFactorTokenByEmail = async (email: string) => {
+  try {
+    const twoFactorToken = await db.query.twoFactorTokens.findFirst({
+      where: eq(twoFactorTokens.email, email),
+    });
+
+    return twoFactorToken;
+  } catch (error) {
+    console.log("error while getting two factor token by email", error);
+  }
+};
+// get the twofactor token row from the db via given token
+export const getTwoFactorTokenByToken = async (token: string) => {
+  try {
+    const twoFactorToken = await db.query.twoFactorTokens.findFirst({
+      where: eq(twoFactorTokens.token, token),
+    });
+
+    return twoFactorToken;
+  } catch (error) {
+    console.log("error while getting two factor token by token", error);
+  }
+};
+
+// GNERATE
+// generate password reset token
+export const generateTwoFactorToken = async (email: string) => {
+  try {
+    const token = crypto.randomInt(100_000, 1_000_000).toString();
+
+    // set expiries
+    const expires = new Date(new Date().getTime() + 3600 * 1000); // 1 hour time limit
+
+    const existingToken = await getTwoFactorTokenByEmail(email);
+
+    if (existingToken) {
+      await db
+        .delete(twoFactorTokens)
+        .where(eq(twoFactorTokens.id, existingToken.id));
+    }
+
+    const twoFactorToken = await db
+      .insert(twoFactorTokens)
+      .values({
+        email,
+        token,
+        expires,
+      })
+      .returning();
+
+    return twoFactorToken;
+  } catch (error) {
+    console.log("Error while generting two factor token", error);
   }
 };

@@ -24,12 +24,14 @@ import { FormError } from "./FormError";
 
 export default function RegisterForm() {
   // set time for success or error message component to render for 5 seconds
-  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertError, setAlertError] = useState<boolean>(false);
+  const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
   useEffect(() => {
     setTimeout(() => {
-      setShowAlert(false);
+      setAlertError(false);
+      setAlertSuccess(false);
     }, 5000);
-  }, [showAlert]);
+  }, [alertError, alertSuccess]);
 
   // Form State initialized with validation from zod and schema
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -43,15 +45,14 @@ export default function RegisterForm() {
 
   // Server action using 'next-safe-action'
   // extract the execute function and form submit status
-  const { execute, status, isExecuting } = useAction(emailRegister, {
+  const { execute, isExecuting } = useAction(emailRegister, {
     onSuccess(data) {
-      console.log(data);
       if (data.data?.success) {
-        console.log(data.data.success);
+        setAlertSuccess(true);
         setSuccess(data.data.success);
       }
       if (data.data?.error) {
-        console.log(data.data.success);
+        setAlertError(true);
         setError(data.data.error);
       }
     },
@@ -135,8 +136,8 @@ export default function RegisterForm() {
               />
 
               {/* FORM ERROR || SUCCESS */}
-              {showAlert && <FormError message={error} />}
-              {showAlert && <FormSuccess message={success} />}
+              {alertError && <FormError message={error} />}
+              {alertSuccess && <FormSuccess message={success} />}
 
               {/* Forgot Password Link */}
               <Button variant={"link"} size={"sm"}>

@@ -3,10 +3,14 @@
 import { LoginSchema } from "@/types/login-schema";
 import { createSafeActionClient } from "next-safe-action";
 import { db } from "..";
-import { users } from "../schema";
+import { twoFactorTokens, users } from "../schema";
 import { eq } from "drizzle-orm";
-import { generateEmailVerificationToken } from "./tokens";
-import { sendVerificationEmail } from "./email";
+import {
+  generateEmailVerificationToken,
+  generateTwoFactorToken,
+  getTwoFactorTokenByEmail,
+} from "./tokens";
+import { sendTwoFactorTokenByEmail, sendVerificationEmail } from "./email";
 import { signIn } from "../auth";
 import { AuthError } from "next-auth";
 
@@ -15,22 +19,28 @@ import { AuthError } from "next-auth";
 
 const action = createSafeActionClient();
 
+/**
+ * 1. CHECK IF USER EXIST IN DB WITH LOGGED IN EMAIL
+ * 2. CHECK IF EMAIL|USER isemailverified
+ * 3. CHECK IF TWOFACTORENABLED
+ */
+
 export const emailSignIn = action
   .schema(LoginSchema)
-  .action(async ({ parsedInput: { email, password } }) => {
+  .action(async ({ parsedInput: { email, password, code } }) => {
     try {
       // check if the user exists
+      // GET THE USER
       const existingUser = await db.query.users.findFirst({
         where: eq(users.email, email),
       });
 
-      // IF NO SUCH EMAIL MATCH PASS ERROR
+      // IF NO USER WITH LOGGED IN EMAIL THEN return ERROR
       if (existingUser?.email !== email) {
         return { error: "Email not found!" };
       }
 
       // CHECK IF USER VERFIED //
-
       // iF NOT VERFIED
       if (!existingUser.emailVerified) {
         const verficationToken = await generateEmailVerificationToken(email);
@@ -40,6 +50,46 @@ export const emailSignIn = action
         );
 
         return { success: "Confirmation Email Sent!" };
+      }
+
+      // Check for twofactor enabled
+      if (existingUser.twoFactorEnabled) {
+        // IF THERE IS CODE
+        if (code) {
+          const twoFactorToken = await getTwoFactorTokenByEmail(
+            existingUser.email
+          );
+
+          // if no token fetched from db return error
+          if (!twoFactorToken) return { error: "Invalid Token!" };
+
+          // if fetched token is not equal to code
+          if (twoFactorToken.token !== code) return { error: "Invalid Token!" };
+
+          // check if token expired
+          const hasExpired = new Date(twoFactorToken.expires) < new Date();
+          if (hasExpired) {
+            return { error: "Token has expired!" };
+          }
+
+          // if not expired then delete token from db
+          await db
+            .delete(twoFactorTokens)
+            .where(eq(twoFactorTokens.id, twoFactorToken.id));
+        } else {
+          // THERE IS NOT CODE WHILE LOGIN then GENERATE AND SEND ONE
+          // generate token
+          const twoFactorToken = await generateTwoFactorToken(email);
+
+          if (!twoFactorToken)
+            return { error: "Error while generating two factor token!" };
+          // send two factor token email
+          await sendTwoFactorTokenByEmail(
+            twoFactorToken[0].email,
+            twoFactorToken[0].token
+          );
+          return { twoFactor: "Two Factor Token sent to email!" };
+        }
       }
 
       // If USER VERFIEID

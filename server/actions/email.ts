@@ -18,7 +18,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   const { data, error } = await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
-    subject: "Hello world, from ink sprout",
+    subject: "Ink Sprout - Confirmation Link",
     html: `<p style="font-size: 14px; color: black;">Click to <a href="${confirmLink}" style="color: blue; text-decoration: underline;">confirm your email</a></p>
 `,
   });
@@ -47,7 +47,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const { data, error } = await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
-    subject: "Reset password, from ink sprout",
+    subject: "Ink Sprout - Reset password",
     html: `<p style="font-size: 14px; color: black;">Click to <a href="${confirmLink}" style="color: blue; text-decoration: underline;">Reset your Password</a></p>
 `,
   });
@@ -63,4 +63,19 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     console.log("reset email sent successfully", data);
     return;
   }
+};
+
+// send two factor email token
+export const sendTwoFactorTokenByEmail = async (
+  email: string,
+  token: string
+) => {
+  const { data, error } = await resend.emails.send({
+    from: "onboarding@resend.dev",
+    to: email,
+    subject: "Ink Sprout - Your 2 Factor Token",
+    html: `<p>Your Confirmation Code: ${token}</p>`,
+  });
+  if (error) return console.log(error);
+  if (data) return data;
 };

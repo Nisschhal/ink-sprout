@@ -23,14 +23,29 @@ import { Loader2 } from "lucide-react";
 import { FormSuccess } from "./FormSuccess";
 import { FormError } from "./FormError";
 
+// INPUT OTP
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+
 export default function LoginForm() {
   // set time for success or error message component to render for 5 seconds
-  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertError, setAlertError] = useState<boolean>(false);
+  const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
+
+  // Two factor UI
+  const [showTwoFactor, setShowTwoFactor] = useState<boolean>(false);
+
+  // useEffect to timeout alerts
   useEffect(() => {
     setTimeout(() => {
-      setShowAlert(false);
+      setAlertError(false);
+      setAlertSuccess(false);
     }, 5000);
-  }, [showAlert]);
+  }, [alertError, alertSuccess]);
 
   // Form State initialized with validation from zod and schema
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -44,11 +59,18 @@ export default function LoginForm() {
 
   // Server action using 'next-safe-action'
   // extract the execute function and form submit status
-  const { execute, isExecuting } = useAction(emailSignIn, {
+  const { execute, isExecuting, status } = useAction(emailSignIn, {
     onSuccess({ data }) {
-      console.log(data);
-      if (data?.error) setError(data.error);
-      if (data?.success) setSuccess(data.success);
+      if (data?.success) {
+        setAlertSuccess(true);
+        setSuccess(data?.success);
+      }
+      if (data?.error) {
+        setAlertError(true);
+        setError(data?.error);
+      }
+
+      if (data?.twoFactor) setShowTwoFactor(true);
     },
   });
 
@@ -69,6 +91,47 @@ export default function LoginForm() {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             {/* Form Fields */}
             <div className="space-y-5">
+              {showTwoFactor && (
+                <>
+                  {" "}
+                  {/* TWO fACTOR CODE */}
+                  <FormField
+                    control={form.control}
+                    name="code"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          We&apos;ve sent you a two factor code to your email.
+                        </FormLabel>
+                        <FormControl>
+                          <InputOTP
+                            maxLength={6}
+                            {...field}
+                            disabled={status === "executing"}
+                          >
+                            <InputOTPGroup>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                            </InputOTPGroup>
+                            <InputOTPSeparator />
+                            <InputOTPGroup>
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                            </InputOTPGroup>
+                            <InputOTPSeparator />
+                            <InputOTPGroup>
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
               {/* Email */}
               <FormField
                 control={form.control}
@@ -114,8 +177,8 @@ export default function LoginForm() {
                 <Link href="/auth/reset">Forgot your password?</Link>
               </Button>
               {/* FORM ERROR || SUCCESS */}
-              {showAlert && <FormError message={error} />}
-              {showAlert && <FormSuccess message={success} />}
+              {alertError && <FormError message={error} />}
+              {alertSuccess && <FormSuccess message={success} />}
             </div>
 
             {/* Submit Button */}
@@ -125,7 +188,7 @@ export default function LoginForm() {
                   <Loader2 className="animate-spin size-3.5" /> Loggin in...
                 </>
               ) : (
-                "Login"
+                <>{showTwoFactor ? "Verify" : "Login"}</>
               )}
             </Button>
           </form>

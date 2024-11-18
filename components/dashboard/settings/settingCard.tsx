@@ -37,6 +37,7 @@ type SettingForm = {
 };
 
 export default function SettingCard({ session }: SettingForm) {
+  console.log(session);
   // set time for success or error message component to render for 5 seconds
   const [showAlert, setShowAlert] = useState<boolean>(false);
   useEffect(() => {
@@ -48,29 +49,30 @@ export default function SettingCard({ session }: SettingForm) {
   const form = useForm<z.infer<typeof SettingSchema>>({
     resolver: zodResolver(SettingSchema),
     defaultValues: {
+      password: undefined,
+      newPassword: undefined,
       name: session.user?.name || undefined,
       email: session.user?.email || undefined,
-      image: session.user?.image || undefined,
-      password: "",
-      newPassword: "",
-      isTwoFactorEnabled: false,
+      image: session.user.image || undefined,
+      isTwoFactorEnabled: session.user?.isTwoFactorEnabled || undefined,
     },
   });
 
-  const [avatarUploading, setAvatarUploading] = useState<boolean | null>(false);
+  const [avatarUploading, setAvatarUploading] = useState<boolean>(false);
   // Form error or success message
   const [error, setError] = useState<string | undefined>(undefined);
   const [success, setSuccess] = useState<string | undefined>(undefined);
 
-  // action
+  // action via useAction next-safe-action
   const { execute, status } = useAction(settings, {
     onSuccess(data) {
+      setShowAlert(true);
+
       if (data.data?.success) {
-        setShowAlert(true);
         setSuccess("Setting updated Successfully!");
       }
+
       if (data.data?.error) {
-        setShowAlert(true);
         setError(data.data.error);
       }
     },
@@ -78,9 +80,10 @@ export default function SettingCard({ session }: SettingForm) {
       setError("Something went wrong while setting action");
     },
   });
-  // Form submit
+  // Form submit handler
   function onSubmit(values: z.infer<typeof SettingSchema>) {
     execute(values);
+    console.log(values);
   }
 
   // formstate
@@ -160,14 +163,11 @@ export default function SettingCard({ session }: SettingForm) {
                   <FormControl>
                     <Input
                       type="password"
-                      disabled={
-                        status == "executing" || session.user.isOAuth === true
-                      }
+                      disabled={status === "executing" || session.user.isOAuth}
                       placeholder="********"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription />
                   <FormMessage />
                 </FormItem>
               )}
@@ -182,9 +182,7 @@ export default function SettingCard({ session }: SettingForm) {
                   <FormControl>
                     <Input
                       type="password"
-                      disabled={
-                        status == "executing" || session.user.isOAuth === true
-                      }
+                      disabled={status === "executing" || session.user.isOAuth}
                       placeholder="********"
                       {...field}
                     />
@@ -198,7 +196,7 @@ export default function SettingCard({ session }: SettingForm) {
             <FormField
               control={form.control}
               name="isTwoFactorEnabled"
-              render={({}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Two Factor Authentication</FormLabel>
                   <FormDescription>
@@ -206,9 +204,9 @@ export default function SettingCard({ session }: SettingForm) {
                   </FormDescription>
                   <FormControl>
                     <Switch
-                      disabled={
-                        status === "executing" || session.user.isOAuth === true
-                      }
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={status === "executing" || session.user.isOAuth}
                     />
                   </FormControl>
                   <FormDescription />
@@ -220,8 +218,12 @@ export default function SettingCard({ session }: SettingForm) {
             {showAlert && <FormError message={error} />}
             {showAlert && <FormSuccess message={success} />}
             {/* Submit Button */}
-            <Button type="submit" className="w-full my-2">
-              {status === "executing" && avatarUploading ? (
+            <Button
+              type="submit"
+              disabled={status == "executing" || (avatarUploading as boolean)}
+              className="w-full my-2"
+            >
+              {status == "executing" || avatarUploading ? (
                 <>
                   <Loader2 className="animate-spin size-3.5" /> Updating
                   profile..

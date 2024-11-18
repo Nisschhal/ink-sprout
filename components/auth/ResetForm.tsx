@@ -46,7 +46,7 @@ export default function ResetForm() {
   // extract the execute function and form submit status
   const { execute, isExecuting } = useAction(reset, {
     onSuccess({ data }) {
-      console.log(data);
+      setShowAlert(true);
       if (data?.error) setError(data.error);
       if (data?.success) setSuccess(data.success);
     },
