@@ -84,7 +84,7 @@ _Note: Don't forget to add AUTH_SECRET in `./server/auth.ts` by doing `npx auth 
    npm run dev
    ```
 6. Access the app at `http://localhost:3000`.
-
+pgTable
 ## Project Structure
 
 - `/pages`: Next.js routing and page components.

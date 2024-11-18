@@ -18,12 +18,20 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { emailSignIn } from "@/server/actions/email-signin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { FormSuccess } from "./FormSuccess";
 import { FormError } from "./FormError";
 
 export default function LoginForm() {
+  // set time for success or error message component to render for 5 seconds
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+  }, [showAlert]);
+
   // Form State initialized with validation from zod and schema
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -105,8 +113,9 @@ export default function LoginForm() {
               <Button variant={"link"} size={"sm"}>
                 <Link href="/auth/reset">Forgot your password?</Link>
               </Button>
-              <FormSuccess message={success} />
-              <FormError message={error} />
+              {/* FORM ERROR || SUCCESS */}
+              {showAlert && <FormError message={error} />}
+              {showAlert && <FormSuccess message={success} />}
             </div>
 
             {/* Submit Button */}

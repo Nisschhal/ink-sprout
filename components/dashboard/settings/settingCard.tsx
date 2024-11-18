@@ -24,19 +24,26 @@ import { SettingSchema } from "@/types/settings-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 import Image from "next/image";
-
+import { useAction } from "next-safe-action/hooks";
+import { settings } from "@/server/actions/settings";
 // make own type to avoid session props errors
 type SettingForm = {
   session: Session;
 };
 
 export default function SettingCard({ session }: SettingForm) {
-  console.log(session, "session");
+  // set time for success or error message component to render for 5 seconds
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+  }, [showAlert]);
   // form from 'react-form-hook with type from SettingSchema
   const form = useForm<z.infer<typeof SettingSchema>>({
     resolver: zodResolver(SettingSchema),
@@ -46,17 +53,31 @@ export default function SettingCard({ session }: SettingForm) {
       image: session.user?.image || undefined,
       password: "",
       newPassword: "",
-      isTwoFactorEnable: false,
+      isTwoFactorEnabled: false,
     },
   });
 
-  const [isExecuting, setIsExecution] = useState<boolean | null>(false);
-
   const [avatarUploading, setAvatarUploading] = useState<boolean | null>(false);
   // Form error or success message
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [success, setSuccess] = useState<string | undefined>(undefined);
 
+  // action
+  const { execute, status } = useAction(settings, {
+    onSuccess(data) {
+      if (data.data?.success) {
+        setShowAlert(true);
+        setSuccess("Setting updated Successfully!");
+      }
+      if (data.data?.error) {
+        setShowAlert(true);
+        setError(data.data.error);
+      }
+    },
+    onError() {
+      setError("Something went wrong while setting action");
+    },
+  });
   // Form submit
   function onSubmit(values: z.infer<typeof SettingSchema>) {
     execute(values);
@@ -135,11 +156,13 @@ export default function SettingCard({ session }: SettingForm) {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Current Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      disabled={status == "executing"}
+                      disabled={
+                        status == "executing" || session.user.isOAuth === true
+                      }
                       placeholder="********"
                       {...field}
                     />
@@ -159,7 +182,9 @@ export default function SettingCard({ session }: SettingForm) {
                   <FormControl>
                     <Input
                       type="password"
-                      disabled={status == "executing"}
+                      disabled={
+                        status == "executing" || session.user.isOAuth === true
+                      }
                       placeholder="********"
                       {...field}
                     />
@@ -173,24 +198,27 @@ export default function SettingCard({ session }: SettingForm) {
             <FormField
               control={form.control}
               name="isTwoFactorEnabled"
-              render={({ field }) => (
+              render={({}) => (
                 <FormItem>
                   <FormLabel>Two Factor Authentication</FormLabel>
                   <FormDescription>
                     Enable two factor authentication for your account
                   </FormDescription>
                   <FormControl>
-                    <Switch disabled={status === "executing"} />
+                    <Switch
+                      disabled={
+                        status === "executing" || session.user.isOAuth === true
+                      }
+                    />
                   </FormControl>
                   <FormDescription />
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             {/* FORM ERROR || SUCCESS */}
-            <FormError message={error} />
-            <FormSuccess message={success} />
+            {showAlert && <FormError message={error} />}
+            {showAlert && <FormSuccess message={success} />}
             {/* Submit Button */}
             <Button type="submit" className="w-full my-2">
               {status === "executing" && avatarUploading ? (
