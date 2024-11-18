@@ -28,6 +28,7 @@ import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
+import Image from "next/image";
 
 // make own type to avoid session props errors
 type SettingForm = {
@@ -35,14 +36,14 @@ type SettingForm = {
 };
 
 export default function SettingCard({ session }: SettingForm) {
-  console.log(session);
+  console.log(session, "session");
   // form from 'react-form-hook with type from SettingSchema
   const form = useForm<z.infer<typeof SettingSchema>>({
     resolver: zodResolver(SettingSchema),
     defaultValues: {
-      name: session.user?.name,
-      email: session.user?.email,
-      image: session.user?.image,
+      name: session.user?.name || undefined,
+      email: session.user?.email || undefined,
+      image: session.user?.image || undefined,
       password: "",
       newPassword: "",
       isTwoFactorEnable: false,
@@ -51,6 +52,7 @@ export default function SettingCard({ session }: SettingForm) {
 
   const [isExecuting, setIsExecution] = useState<boolean | null>(false);
 
+  const [avatarUploading, setAvatarUploading] = useState<boolean | null>(false);
   // Form error or success message
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -70,10 +72,7 @@ export default function SettingCard({ session }: SettingForm) {
       <CardContent>
         <Form {...form}>
           {/* // custom form using react-hook-form*/}
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3 md:space-y-5"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
             {/* Name Field */}
             <FormField
               control={form.control}
@@ -82,7 +81,48 @@ export default function SettingCard({ session }: SettingForm) {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Your Name" {...field} />
+                    <Input
+                      type="text"
+                      disabled={status == "executing"}
+                      placeholder="Your Name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Image Hidden Field */}
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Avatar</FormLabel>
+                  {/* Display Auth image */}
+                  <div className="flex items-center gap-4">
+                    {!form.getValues("image") ? (
+                      <div className="font-bold">
+                        {session.user?.name?.charAt(0).toUpperCase()}
+                      </div>
+                    ) : (
+                      <Image
+                        src={session.user?.image as string}
+                        alt="User image"
+                        className="rounded-full"
+                        height={42}
+                        width={42}
+                      />
+                    )}
+                  </div>
+                  <FormControl>
+                    <Input
+                      placeholder="User Image"
+                      type="hidden"
+                      disabled={status == "executing"}
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription />
                   <FormMessage />
@@ -97,14 +137,19 @@ export default function SettingCard({ session }: SettingForm) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
+                    <Input
+                      type="password"
+                      disabled={status == "executing"}
+                      placeholder="********"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription />
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* Password Field */}
+            {/* New Password Field */}
             <FormField
               control={form.control}
               name="newPassword"
@@ -112,7 +157,12 @@ export default function SettingCard({ session }: SettingForm) {
                 <FormItem>
                   <FormLabel>New Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
+                    <Input
+                      type="password"
+                      disabled={status == "executing"}
+                      placeholder="********"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription />
                   <FormMessage />
@@ -143,7 +193,7 @@ export default function SettingCard({ session }: SettingForm) {
             <FormSuccess message={success} />
             {/* Submit Button */}
             <Button type="submit" className="w-full my-2">
-              {status === "executing" ? (
+              {status === "executing" && avatarUploading ? (
                 <>
                   <Loader2 className="animate-spin size-3.5" /> Updating
                   profile..

@@ -14,5 +14,5 @@ export const SettingSchema = z
       if (data.password !== data.newPassword) return false;
       return true;
     },
-    { message: "Password must be same!" }
+    { message: "Password must be same!", path: ["newPassword"] }
   );
