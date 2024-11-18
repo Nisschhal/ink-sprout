@@ -25,7 +25,7 @@ import { FormError } from "./FormError";
 
 export default function LoginForm() {
   // Form State initialized with validation from zod and schema
-  const form = useForm({
+  const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: { email: "", password: "" },
   });
@@ -36,7 +36,7 @@ export default function LoginForm() {
 
   // Server action using 'next-safe-action'
   // extract the execute function and form submit status
-  const { execute,  isExecuting } = useAction(emailSignIn, {
+  const { execute, isExecuting } = useAction(emailSignIn, {
     onSuccess({ data }) {
       console.log(data);
       if (data?.error) setError(data.error);
