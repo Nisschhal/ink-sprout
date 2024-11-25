@@ -16,6 +16,7 @@ export const settings = action
   .action(async ({ parsedInput: values }) => {
     // get the session user from next-auth
     const user = await auth();
+    console.log("user her", user);
 
     // IF NOT USER RETURN ERROR
     if (!user) {
