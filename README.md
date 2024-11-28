@@ -26,6 +26,7 @@
 - **Payment Processing**: Stripe
 - **State Management**: Redux (or Context API)
 - **Deployment**: Vercel for frontend, Heroku for backend (or choose based on preference)
+- **UploadThings**: For image upload
 
 ## Implementation Details (./server)
 
@@ -58,6 +59,10 @@ _Note: **db** connection should be in `./server/index.ts` where as **schema** sh
 
 _Note: Don't forget to add AUTH_SECRET in `./server/auth.ts` by doing `npx auth || secret` as handlers requires it and add **session.strategy: 'jwt'** for not defaulting to session schema_
 
+### 3. Upload Thing Image Upload
+
+- For changing profile pic | avatar image
+
 ## Installation
 
 1. Clone the repository:
@@ -84,7 +89,8 @@ _Note: Don't forget to add AUTH_SECRET in `./server/auth.ts` by doing `npx auth 
    npm run dev
    ```
 6. Access the app at `http://localhost:3000`.
-pgTable
+   pgTable
+
 ## Project Structure
 
 - `/pages`: Next.js routing and page components.
