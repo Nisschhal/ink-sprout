@@ -31,6 +31,7 @@ import { FormSuccess } from "@/components/auth/FormSuccess";
 import Image from "next/image";
 import { useAction } from "next-safe-action/hooks";
 import { settings } from "@/server/actions/settings";
+import { UploadButton } from "@/app/api/uploadthing/uploadthing";
 // make own type to avoid session props errors
 type SettingForm = {
   session: Session;
@@ -126,19 +127,51 @@ export default function SettingCard({ session }: SettingForm) {
                   <FormLabel>Avatar</FormLabel>
                   {/* Display Auth image */}
                   <div className="flex items-center gap-4">
-                    {!form.getValues("image") ? (
+                    {/* // IF NO IMAGE THEN SHOW CHARACTER */}
+                    {!form.getValues("image") && (
                       <div className="font-bold">
                         {session.user?.name?.charAt(0).toUpperCase()}
                       </div>
-                    ) : (
+                    )}
+
+                    {typeof form.getValues("image") == "string" && (
                       <Image
-                        src={session.user?.image as string}
-                        alt="User image"
-                        className="rounded-full"
-                        height={42}
+                        src={form.getValues("image")!}
                         width={42}
+                        height={42}
+                        className="rounded-full"
+                        alt="User Image"
+                        {...field}
                       />
                     )}
+
+                    {/* UPLOAD THING  */}
+                    <UploadButton
+                      className="scale-75 ut-button:bg-primary/75 hover:ut-button:bg-primary/100 ut-button:transition-all ut-button:duration-500 ut-label:hidden ut-allowed-content:hidden"
+                      endpoint={"avatarUploader"}
+                      onUploadBegin={() => {
+                        setAvatarUploading(true);
+                      }}
+                      onUploadError={(error) => {
+                        form.setError("image", {
+                          type: "validate",
+                          message: error.message,
+                        });
+                        setAvatarUploading(false);
+                        return;
+                      }}
+                      onClientUploadComplete={(res) => {
+                        form.setValue("image", res[0].url);
+                        setAvatarUploading(false);
+                      }}
+                      content={{
+                        button({ ready }) {
+                          if (ready) return <div>Change Avatar </div>;
+                          return <div> Uploading... </div>;
+                        },
+                      }}
+                      {...field}
+                    />
                   </div>
                   <FormControl>
                     <Input
