@@ -7,5 +7,5 @@ export default async function AddProduct() {
 
   if (session?.user.role !== "admin") return redirect("/dashboard/settings");
 
-  return <ProductForm />;
+  return <ProductForm  />;
 }

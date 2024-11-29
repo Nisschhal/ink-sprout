@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,7 +28,7 @@ export default function ProductForm() {
     defaultValues: {
       title: "",
       description: "",
-      price: 0,
+      price: undefined,
     },
   });
 
@@ -71,7 +70,7 @@ export default function ProductForm() {
                 <FormItem>
                   <FormLabel>Product Title</FormLabel>
                   <FormControl>
-                    <Tiptap />
+                    <Tiptap val={field.value} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
