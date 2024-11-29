@@ -10,6 +10,7 @@ import { useFormContext } from "react-hook-form";
 
 const Tiptap = ({ val }: { val: string }) => {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       Placeholder.configure({
         placeholder: "Write something about your product…",

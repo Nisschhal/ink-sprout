@@ -19,37 +19,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { DollarSign } from "lucide-react";
+import { DollarSign, Loader2 } from "lucide-react";
 import Tiptap from "./tiptap";
 import { useAction } from "next-safe-action/hooks";
 import { createProduct } from "@/server/actions/create-product";
 import { useEffect, useState } from "react";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function ProductForm() {
-  // set time for success or error message component to render for 5 seconds
-  const [alertError, setAlertError] = useState<boolean>(false);
-  const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
-
-  // Error Status state from action
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  // useEffect to timeout alerts
-  useEffect(() => {
-    setTimeout(() => {
-      setAlertError(false);
-      setAlertSuccess(false);
-    }, 5000);
-  }, [alertError, alertSuccess]);
+  // when product added push to '/product'
+  const router = useRouter();
 
   const form = useForm<zProductSchema>({
     resolver: zodResolver(prodcutSchema),
     defaultValues: {
       title: "",
       description: "",
-      price: undefined,
+      price: 0,
     },
   });
 
@@ -57,13 +46,12 @@ export default function ProductForm() {
     onSuccess: ({ data }) => {
       if (data?.success) {
         console.log(data);
-        setAlertSuccess(true);
-        setSuccess(data.success);
+        router.push("/dashboard/products");
+        toast.success(data.success);
       }
 
       if (data?.error) {
-        setAlertError(true);
-        setError(data.error);
+        toast.error(data.error);
       }
     },
     onError: (error) => {
@@ -73,6 +61,7 @@ export default function ProductForm() {
 
   // submit handler
   const onSubmit = async (values: zProductSchema) => {
+    toast.loading("Creating Product...", { duration: 2000 });
     execute(values);
   };
 
@@ -109,7 +98,7 @@ export default function ProductForm() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Title</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Tiptap val={field.value} {...field} />
                   </FormControl>
@@ -144,10 +133,6 @@ export default function ProductForm() {
               )}
             />
 
-            {/* FORM ERROR || SUCCESS */}
-            {alertError && <FormError message={error} />}
-            {alertSuccess && <FormSuccess message={success} />}
-
             <Button
               disabled={
                 status == "executing" ||
@@ -157,7 +142,13 @@ export default function ProductForm() {
               className="w-full"
               type="submit"
             >
-              Submit
+              {status == "executing" ? (
+                <>
+                  <Loader2 className="animate-spin size-3.5" /> Submitting...
+                </>
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </Form>

@@ -28,6 +28,7 @@
 - **Deployment**: Vercel for frontend, Heroku for backend (or choose based on preference)
 - **UploadThings**: For image upload
 - **TipTap**: For Rich Text Editor
+- **Sonner**: For Notification Toast
 
 ## Implementation Details (./server)
 
