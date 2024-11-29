@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
+import Tiptap from "./tiptap";
 
 export default function ProductForm() {
   const form = useForm<zProductSchema>({
@@ -70,11 +71,7 @@ export default function ProductForm() {
                 <FormItem>
                   <FormLabel>Product Title</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="This Marker is the best!"
-                      type="textarea"
-                      {...field}
-                    />
+                    <Tiptap />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
