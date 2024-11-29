@@ -27,6 +27,7 @@
 - **State Management**: Redux (or Context API)
 - **Deployment**: Vercel for frontend, Heroku for backend (or choose based on preference)
 - **UploadThings**: For image upload
+- **TipTap**: For Rich Text Editor
 
 ## Implementation Details (./server)
 
@@ -62,6 +63,10 @@ _Note: Don't forget to add AUTH_SECRET in `./server/auth.ts` by doing `npx auth 
 ### 3. Upload Thing Image Upload
 
 - For changing profile pic | avatar image
+
+### 4. Product with TipTap
+
+- For Rich Text Editor to add description
 
 ## Installation
 

@@ -21,8 +21,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
 import Tiptap from "./tiptap";
+import { useAction } from "next-safe-action/hooks";
+import { createProduct } from "@/server/actions/create-product";
+import { useEffect, useState } from "react";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
 export default function ProductForm() {
+  // set time for success or error message component to render for 5 seconds
+  const [alertError, setAlertError] = useState<boolean>(false);
+  const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
+
+  // Error Status state from action
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // useEffect to timeout alerts
+  useEffect(() => {
+    setTimeout(() => {
+      setAlertError(false);
+      setAlertSuccess(false);
+    }, 5000);
+  }, [alertError, alertSuccess]);
+
   const form = useForm<zProductSchema>({
     resolver: zodResolver(prodcutSchema),
     defaultValues: {
@@ -32,8 +53,28 @@ export default function ProductForm() {
     },
   });
 
+  const { execute, status } = useAction(createProduct, {
+    onSuccess: ({ data }) => {
+      if (data?.success) {
+        console.log(data);
+        setAlertSuccess(true);
+        setSuccess(data.success);
+      }
+
+      if (data?.error) {
+        setAlertError(true);
+        setError(data.error);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   // submit handler
-  const onSubmit = () => {};
+  const onSubmit = async (values: zProductSchema) => {
+    execute(values);
+  };
 
   return (
     <Card>
@@ -102,7 +143,20 @@ export default function ProductForm() {
                 </FormItem>
               )}
             />
-            <Button className="w-full" type="submit">
+
+            {/* FORM ERROR || SUCCESS */}
+            {alertError && <FormError message={error} />}
+            {alertSuccess && <FormSuccess message={success} />}
+
+            <Button
+              disabled={
+                status == "executing" ||
+                !form.formState.isValid ||
+                !form.formState.isDirty
+              }
+              className="w-full"
+              type="submit"
+            >
               Submit
             </Button>
           </form>
