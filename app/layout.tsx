@@ -6,6 +6,11 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/theme-providers";
 
+// uploadthing for not showing readiness of state
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
+
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +31,8 @@ export default function RootLayout({
           `${inter.className}, antialiased px-6 md:px-12 max-w-7xl mx-auto`
         )}
       >
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
