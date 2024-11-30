@@ -35,7 +35,7 @@ export default function ProductForm() {
 
   // get the id if there is any in the url
   const params = useSearchParams();
-  const id = parseInt(params.get("id"));
+  const id = parseInt(params.get("id") as string);
 
   const form = useForm<zProductSchema>({
     resolver: zodResolver(prodcutSchema),

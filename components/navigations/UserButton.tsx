@@ -15,7 +15,7 @@ import { LogOut, Moon, Settings, Sun, TruckIcon } from "lucide-react";
 // import theme hook from 'next-themes'
 
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "../ui/switch";
 import { useRouter } from "next/navigation";
 
@@ -28,20 +28,9 @@ export function UserButton({ user }: Session) {
   // state to see if dark is on
   const [darkOn, setDarkOn] = useState(false);
 
-  // function with switch to toogle between dark, light, or system
-  function setSwitchState() {
-    switch (theme) {
-      case "dark": {
-        return setDarkOn(true);
-      }
-      case "light": {
-        return setDarkOn(false);
-      }
-      case "system": {
-        return setDarkOn(false);
-      }
-    }
-  }
+  useEffect(() => {
+    if (theme === "dark") setDarkOn(true);
+  }, [theme]);
 
   return (
     <div>

@@ -22,7 +22,7 @@ export const createProduct = action
           .set({ title, description, price })
           .where(eq(products.id, id))
           .returning();
-          console.log(foundProduct)
+        console.log(foundProduct);
         return {
           success: `Product Fetched Successfully! `,
           product: foundProduct,
