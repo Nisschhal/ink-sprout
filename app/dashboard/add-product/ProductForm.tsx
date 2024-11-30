@@ -23,11 +23,10 @@ import { DollarSign, Loader2 } from "lucide-react";
 import Tiptap from "./tiptap";
 import { useAction } from "next-safe-action/hooks";
 import { createProduct } from "@/server/actions/create-product";
-import { useEffect, useState } from "react";
-import { FormError } from "@/components/auth/FormError";
-import { FormSuccess } from "@/components/auth/FormSuccess";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { getProduct } from "@/server/actions/get-product";
 
 export default function ProductForm() {
   // when product added push to '/product'
@@ -37,6 +36,26 @@ export default function ProductForm() {
   const params = useSearchParams();
   const id = parseInt(params.get("id") as string);
 
+  const checkProduct = async () => {
+    if (id) {
+      const data = await getProduct({ id });
+      if (data?.data?.error) {
+        router.push("/dashboard/products");
+        return;
+      }
+      if (data?.data?.success) {
+        form.setValue("id", data.data.product.id);
+        form.setValue("title", data.data.product.title);
+        form.setValue("description", data.data.product.description);
+        form.setValue("price", data.data.product.price);
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkProduct();
+  }, []);
+
   const form = useForm<zProductSchema>({
     resolver: zodResolver(prodcutSchema),
     defaultValues: {
@@ -44,6 +63,7 @@ export default function ProductForm() {
       description: "",
       price: 0,
     },
+    mode: "onChange",
   });
 
   const { execute, status } = useAction(createProduct, {
@@ -51,12 +71,20 @@ export default function ProductForm() {
       if (data?.success) {
         console.log(data);
         router.push("/dashboard/products");
-        // toast.success(data.success);
+        toast.success(data.success);
       }
 
       if (data?.error) {
         toast.error(data.error);
       }
+    },
+    onExecute: () => {
+      toast.info(
+        `${
+          (id && "Updating existing product...") || "Creating new product..."
+        }`,
+        { duration: 2000 }
+      );
     },
     onError: (error) => {
       console.log(error);
@@ -65,26 +93,21 @@ export default function ProductForm() {
 
   // submit handler
   const onSubmit = async (values: zProductSchema) => {
-    const promise = () =>
-      new Promise((resolve) =>
-        setTimeout(() => resolve({ name: "Sonner" }), 2000)
-      );
-
-    toast.promise(promise, {
-      loading: "Creating new product...",
-      success: () => {
-        return `${values.title} Product has been created Successfully!`;
-      },
-      error: "Error",
-    });
-    execute({ id, ...values });
+    if (id) {
+      execute({ id, ...values });
+    } else {
+      execute(values);
+    }
   };
 
   return (
     <Card>
       <CardHeader className="flex flex-col gap-1">
-        <CardTitle>Add Product</CardTitle>
-        <CardDescription>Detail of your new stock</CardDescription>
+        <CardTitle>{(id && "Edit Product") || "Add New Product"}</CardTitle>
+        <CardDescription>
+          {(id && "Make a change to existing product") ||
+            "Create a brand new product"}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -159,10 +182,11 @@ export default function ProductForm() {
             >
               {status == "executing" ? (
                 <>
-                  <Loader2 className="animate-spin size-3.5" /> Submitting...
+                  <Loader2 className="animate-spin size-3.5" />{" "}
+                  <span>{(id && "updating...") || "submitting..."}</span>
                 </>
               ) : (
-                "Submit"
+                <>{(id && "Save change") || "Create a new product"}</>
               )}
             </Button>
           </form>

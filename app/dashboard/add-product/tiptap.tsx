@@ -7,6 +7,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 import { Bold, Italic, List, ListOrdered, Strikethrough } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import { useEffect } from "react";
 
 const Tiptap = ({ val }: { val: string }) => {
   const editor = useEditor({
@@ -47,6 +48,11 @@ const Tiptap = ({ val }: { val: string }) => {
       },
     },
   });
+
+  // Register the value in the editor if it is empty
+  useEffect(() => {
+    if (editor?.isEmpty) editor.commands.setContent(val);
+  }, [val]);
 
   // get the useFormContext to pass the value to the form 'description field'
   const { setValue } = useFormContext();
