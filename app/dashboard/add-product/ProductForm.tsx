@@ -47,7 +47,7 @@ export default function ProductForm() {
       if (data?.success) {
         console.log(data);
         router.push("/dashboard/products");
-        toast.success(data.success);
+        // toast.success(data.success);
       }
 
       if (data?.error) {
@@ -61,7 +61,18 @@ export default function ProductForm() {
 
   // submit handler
   const onSubmit = async (values: zProductSchema) => {
-    toast.loading("Creating Product...", { duration: 2000 });
+    const promise = () =>
+      new Promise((resolve) =>
+        setTimeout(() => resolve({ name: "Sonner" }), 2000)
+      );
+
+    toast.promise(promise, {
+      loading: "Creating new product...",
+      success: () => {
+        return `${values.title} Product has been created Successfully!`;
+      },
+      error: "Error",
+    });
     execute(values);
   };
 

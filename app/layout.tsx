@@ -10,10 +10,9 @@ import { ThemeProvider } from "@/components/providers/theme-providers";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-import { Toaster } from "sonner";
 
 // Toaster | Sonner
-// import Toaster from "@/components/ui/toaster";
+import Toaster from "@/components/ui/toaster";
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ["latin"] });
@@ -44,7 +43,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NavBar />
-          <Toaster richColors />
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>
