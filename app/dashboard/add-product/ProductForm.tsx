@@ -27,11 +27,15 @@ import { useEffect, useState } from "react";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ProductForm() {
   // when product added push to '/product'
   const router = useRouter();
+
+  // get the id if there is any in the url
+  const params = useSearchParams();
+  const id = parseInt(params.get("id"));
 
   const form = useForm<zProductSchema>({
     resolver: zodResolver(prodcutSchema),
@@ -73,7 +77,7 @@ export default function ProductForm() {
       },
       error: "Error",
     });
-    execute(values);
+    execute({ id, ...values });
   };
 
   return (

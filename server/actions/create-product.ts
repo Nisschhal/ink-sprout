@@ -17,11 +17,16 @@ export const createProduct = action
         });
         if (!currentProduct) return { error: "Product not Found!" };
 
-        await db
+        const foundProduct = await db
           .update(products)
           .set({ title, description, price })
-          .where(eq(products.id, id));
-        return { success: `Product Updated Successfully! ` };
+          .where(eq(products.id, id))
+          .returning();
+          console.log(foundProduct)
+        return {
+          success: `Product Fetched Successfully! `,
+          product: foundProduct,
+        };
       } else {
         if (!id) {
           const newProduct = await db
