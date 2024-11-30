@@ -38,18 +38,7 @@ const ActionCell = ({ row }: { row: Row<ProductColumns> }) => {
       }
     },
     onExecute: () => {
-      const promise = () =>
-        new Promise((resolve) =>
-          setTimeout(() => resolve({ name: "Sonner" }), 3000)
-        );
-
-      toast.promise(promise, {
-        loading: "Product deleting...",
-        success: () => {
-          return `Produt has been deleted`;
-        },
-        error: "Error",
-      });
+      toast.info("Product deleting...", { duration: 2000 });
     },
   });
   const product = row.original;

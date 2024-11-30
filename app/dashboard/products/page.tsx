@@ -3,6 +3,13 @@ import { products } from "@/server/schema";
 import placeholder from "@/public/placeholder_small.jpg";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default async function Products() {
   // get the products from the backend
@@ -21,8 +28,18 @@ export default async function Products() {
   }));
 
   return (
-    <div>
-      <DataTable columns={columns} data={dataTable} />
+    <div className="rounded-md border">
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Products</CardTitle>
+          <CardDescription>
+            Update, delete and edit your products 💯
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={dataTable} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
