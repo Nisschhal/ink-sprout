@@ -1,5 +1,10 @@
 import { db } from "@/server";
-import { products } from "@/server/schema";
+import {
+  products,
+  productVariants,
+  variantImages,
+  variantTags,
+} from "@/server/schema";
 import placeholder from "@/public/placeholder_small.jpg";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
@@ -14,6 +19,9 @@ import {
 export default async function Products() {
   // get the products from the backend
   const productData = await db.query.products.findMany({
+    with: {
+      productVariants: { with: { variantImages: true, variantTags: true } },
+    },
     orderBy: (products, { desc }) => [desc(products.id)],
   });
 

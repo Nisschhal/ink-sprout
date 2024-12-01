@@ -154,9 +154,9 @@ export const variantTags = pgTable("variantTags", {
 // ------------- RELATIONS -----------------
 
 // PRODUCTS RELATION to variants [one P - to - many V]
-// export const productRelations = relations(products, ({ many }) => ({
-//   productVariants: many(productVariants, { relationName: "productVariants" }),
-// }));
+export const productRelations = relations(products, ({ many }) => ({
+  productVariants: many(productVariants, { relationName: "productVariants" }),
+}));
 
 // PRODUCT VARIANTS RELATION to  product && variantImages [one V - to - one P] && [one V - to - many vI]
 
