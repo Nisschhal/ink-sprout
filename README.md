@@ -65,9 +65,13 @@ _Note: Don't forget to add AUTH_SECRET in `./server/auth.ts` by doing `npx auth 
 
 - For changing profile pic | avatar image
 
-### 4. Product with TipTap
+### 4. Product with TipTap (Rich Text Editor)
 
 - For Rich Text Editor to add description
+
+### 5. Product List with TanStack Table
+
+- For listing product in table with search filter and paginations
 
 ## Installation
 

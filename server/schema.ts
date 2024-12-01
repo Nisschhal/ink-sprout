@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   timestamp,
   pgTable,
@@ -14,6 +15,7 @@ import type { AdapterAccountType } from "next-auth/adapters";
 // roles enum
 export const RoleEnum = pgEnum("roles", ["user", "admin"]);
 
+// USER MODEL
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -27,6 +29,7 @@ export const users = pgTable("user", {
   role: RoleEnum("roles").default("user"),
 });
 
+// ACCOUNT MODEL [GOOGLE || GITHUB]
 export const accounts = pgTable(
   "account",
   {
@@ -51,6 +54,7 @@ export const accounts = pgTable(
   })
 );
 
+// EMAIL TOKEN VERFICATION MODEL
 export const emailTokens = pgTable(
   "email_tokens",
   {
@@ -68,6 +72,7 @@ export const emailTokens = pgTable(
   })
 );
 
+// PASSWORD RESET TOKEN MODEL
 export const passwordResetTokens = pgTable(
   "password_reset_tokens",
   {
@@ -85,6 +90,7 @@ export const passwordResetTokens = pgTable(
   })
 );
 
+// TWO FACTOR ON TOKEN MODEL
 export const twoFactorTokens = pgTable(
   "two_factor_tokens",
   {
@@ -102,8 +108,8 @@ export const twoFactorTokens = pgTable(
   })
 );
 
-// Product Table
-
+// ------------------------- PRODUCT----------------------
+// PRODUCT MODEL
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
   description: text("description").notNull(),
@@ -111,3 +117,82 @@ export const products = pgTable("products", {
   created: timestamp("created").defaultNow(),
   price: real("price").notNull(),
 });
+
+// PRODUCT VARIANTS
+
+export const productVariants = pgTable("productVariants", {
+  id: serial("id").primaryKey(),
+  color: text("color").notNull(),
+  productType: text("productType").notNull(),
+  updated: timestamp("updated").defaultNow(),
+  productId: serial("productId")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+});
+
+// Variant Images Model
+export const variantImages = pgTable("variantImages", {
+  id: serial("id").primaryKey(),
+  url: text("url").notNull(),
+  size: real("size").notNull(),
+  name: text("name").notNull(),
+  order: real("order").notNull(),
+  variantId: serial("variantId")
+    .notNull()
+    .references(() => productVariants.id, { onDelete: "cascade" }),
+});
+
+// Variant Tags Model
+export const variantTags = pgTable("variantTags", {
+  id: serial("id").primaryKey(),
+  tag: text("tag").notNull(),
+  variantId: serial("variantId")
+    .notNull()
+    .references(() => productVariants.id, { onDelete: "cascade" }),
+});
+
+// ------------- RELATIONS -----------------
+
+// PRODUCTS RELATION to variants [one P - to - many V]
+// export const productRelations = relations(products, ({ many }) => ({
+//   productVariants: many(productVariants, { relationName: "productVariants" }),
+// }));
+
+// PRODUCT VARIANTS RELATION to  product && variantImages [one V - to - one P] && [one V - to - many vI]
+
+// parent is productVariant
+// child is product
+export const productVariantsRelations = relations(
+  productVariants,
+  ({ many, one }) => ({
+    products: one(products, {
+      relationName: "productVariants",
+      fields: [productVariants.productId], // child foreign key
+      references: [products.id], // parent primary key
+    }),
+    variantImages: many(variantImages, {
+      relationName: "variantImages",
+    }),
+    variantTags: many(variantTags, {
+      relationName: "variantTags",
+    }),
+  })
+);
+
+// variantImages relation to variantProduct [one vI - to -  one pV]
+export const variantImageRelations = relations(variantImages, ({ one }) => ({
+  productVariants: one(productVariants, {
+    relationName: "variantImages",
+    fields: [variantImages.variantId],
+    references: [productVariants.id],
+  }),
+}));
+
+// variantTags relation to productVarint [one T - to - one pV]
+export const variantTagsRelation = relations(variantTags, ({ one }) => ({
+  productVariants: one(productVariants, {
+    relationName: "variantTags",
+    fields: [variantTags.variantId],
+    references: [productVariants.id],
+  }),
+}));

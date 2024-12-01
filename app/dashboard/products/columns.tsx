@@ -27,6 +27,8 @@ export type ProductColumns = {
   variants: any;
 };
 
+// Action cell Component to use with useAction
+
 const ActionCell = ({ row }: { row: Row<ProductColumns> }) => {
   const { execute } = useAction(deleteProduct, {
     onSuccess: ({ data }) => {
