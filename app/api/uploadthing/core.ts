@@ -16,11 +16,28 @@ export const ourFileRouter = {
     },
   })
     .onUploadError(async ({ error }) => {
-      console.log(error);
-      console.log("errorrr");
+      console.log("Error in avatarUPloading", error);
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("uploadedd", file);
+      console.log("Avatar Image Upload", file);
+    }),
+
+  // variant Image uploader
+  variantUploader: f({
+    image: {
+      /**
+       * For full list of options and defaults, see the File Route API reference
+       * @see https://docs.uploadthing.com/file-routes#route-config
+       */
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    .onUploadError(async ({ error }) => {
+      console.log("Error in variantUploader", error);
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("VariantImage Uploaded", file);
     }),
 } satisfies FileRouter;
 

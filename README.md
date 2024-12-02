@@ -73,6 +73,17 @@ _Note: Don't forget to add AUTH_SECRET in `./server/auth.ts` by doing `npx auth 
 
 - For listing product in table with search filter and paginations
 
+### 6. Model Relation for Product, productVariant, variantImages, variantTags
+
+- Relation established with one to one and one to many on models
+
+# 7. Implementing Input Tags Component with props: value and onChange
+
+- Created a new shadcn Input()
+- Passed down **props** **_value=field.value_** **_onChange={e => field.onChange(e)}_**
+- setFocus using useFormContext() when input clicked
+- 
+
 ## Installation
 
 1. Clone the repository:

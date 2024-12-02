@@ -29,6 +29,7 @@ export default function InputTags({
     }
   }
 
+  // for setting focus on input fields "tags" when clicked
   const { setFocus } = useFormContext();
 
   return (
@@ -39,9 +40,11 @@ export default function InputTags({
           ? "ring-offset-2 outline-none ring-ring ring-2"
           : "ring-offset-0 outline-none ring-ring ring-0"
       )}
+      // when clicked set focus
       onClick={() => setFocus("tags")}
     >
       <motion.div className="rounded-md min-h-[2.5rem]  p-2 flex gap-2 flex-wrap items-center">
+        {/* for new tags insert and remove transition */}
         <AnimatePresence>
           {value.map((tag) => (
             <motion.div
@@ -53,6 +56,7 @@ export default function InputTags({
               <Badge variant={"secondary"}>
                 {tag}
 
+                {/* when X clicked trigger incoming onChange that imitate e.target.value which is an array of filtered string[] in value props */}
                 <button
                   className="w-2 ml-2 "
                   onClick={() => onChange(value.filter((i) => i !== tag))}
@@ -65,14 +69,19 @@ export default function InputTags({
         </AnimatePresence>
         <div className="flex">
           <Input
+            //   get all the other shadcn default props
             {...props}
             className="focus-visible:border-transparent border-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder="Add tags"
             onKeyDown={(e) => {
+              // when enter pressed trigger function to check and add new tags
               if (e.key === "Enter") {
                 e.preventDefault();
                 addPendingDataPoint();
               }
+              // when backspace pressed && no text in input && has tags in value=[string[]]
+              // create a new value array and pop the last one
+              // pass the array of new value of array as e.target.value to incoming onChange
               if (
                 e.key === "Backspace" &&
                 !pendingDataPoint &&
