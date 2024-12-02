@@ -56,90 +56,85 @@ export default function ProductVariant({
     <div className="w-full">
       <Dialog>
         <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent>
-          <div className="h-[90vh] w-full overflow-y-scroll space-y-4 py-1 m-0 px-2">
-            <DialogHeader>
-              <DialogTitle>
-                {editMode ? "Edit" : "Create"} your variant
-              </DialogTitle>
-              <DialogDescription>
-                Manage your product variant here. You can add tags, images, and
-                more.
-              </DialogDescription>
-            </DialogHeader>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                {/* Product Type: variant */}
-                <FormField
-                  control={form.control}
-                  name="productType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Variant Title</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Pick a title for your variant"
-                          {...field}
-                        />
-                      </FormControl>
+        <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-[660px]  rounded-md ">
+          <DialogHeader className="border py-2">
+            <DialogTitle>
+              {editMode ? "Edit" : "Create"} your variant
+            </DialogTitle>
+            <DialogDescription>
+              Manage your product variant here. You can add tags, images, and
+              more.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              {/* Product Type: variant */}
+              <FormField
+                control={form.control}
+                name="productType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Variant Title</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Pick a title for your variant"
+                        {...field}
+                      />
+                    </FormControl>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* Variant color: variant */}
-                <FormField
-                  control={form.control}
-                  name="color"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Variant Color</FormLabel>
-                      <FormControl>
-                        <Input type="color" {...field} />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Variant Tags: variant */}
-                <FormField
-                  control={form.control}
-                  name="tags"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Variant Tags</FormLabel>
-                      <FormControl>
-                        <InputTags
-                          {...field}
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          onChange={(e: any) => field.onChange(e)}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* Variant Images:  */}
-                <VariantImages />
-
-                {editMode && variant && (
-                  <Button type="button" onClick={(e) => e.preventDefault()}>
-                    Delete Variant
-                  </Button>
+                    <FormMessage />
+                  </FormItem>
                 )}
+              />
+              {/* Variant color: variant */}
+              <FormField
+                control={form.control}
+                name="color"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Variant Color</FormLabel>
+                    <FormControl>
+                      <Input type="color" {...field} />
+                    </FormControl>
 
-                <Button type="submit">
-                  {editMode ? "Update Variant" : "Create Variant"}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Variant Tags: variant */}
+              <FormField
+                control={form.control}
+                name="tags"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Variant Tags</FormLabel>
+                    <FormControl>
+                      <InputTags
+                        {...field}
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onChange={(e: any) => field.onChange(e)}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Variant Images:  */}
+              <VariantImages />
+
+              {editMode && variant && (
+                <Button type="button" onClick={(e) => e.preventDefault()}>
+                  Delete Variant
                 </Button>
-              </form>
-            </Form>
-          </div>
+              )}
+
+              <Button type="submit">
+                {editMode ? "Update Variant" : "Create Variant"}
+              </Button>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </div>

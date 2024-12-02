@@ -25,8 +25,15 @@ import { Trash } from "lucide-react"; // Trash icon for delete action
 import Image from "next/image"; // Next.js optimized Image component
 import { useFieldArray, useFormContext } from "react-hook-form"; // React-Hook-Form utilities
 
+// Reorder from framer motion
+import { Reorder } from "motion/react";
+import { useState } from "react";
+
 // Main component for managing variant images
 export default function VariantImages() {
+  // Index for reorder images
+  const [active, setActive] = useState(0);
+
   // Get form methods from the context (provided by parent form component)
   const { getValues, control, setError } = useFormContext<zVariantSchema>();
 
@@ -109,11 +116,24 @@ export default function VariantImages() {
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <Reorder.Group
+            as="tbody"
+            values={fields}
+            onReorder={(e) => {
+              const activeElement = fields[active];
+              e.map((item, index) => {
+                if (item === activeElement) move(active, index);
+              });
+              return;
+            }}
+          >
             {/* Loop through the fields to render each row in the table */}
             {fields.map((field, index) => (
-              <TableRow
-                key={index}
+              <Reorder.Item
+                as="tr"
+                value={field}
+                onDragStart={() => setActive(index)}
+                key={field.id}
                 className={cn(
                   field.url.search("blob:") === 0
                     ? "animate-pulse transition-all"
@@ -146,9 +166,9 @@ export default function VariantImages() {
                     <Trash className="h-4" />
                   </Button>
                 </TableCell>
-              </TableRow>
+              </Reorder.Item>
             ))}
-          </TableBody>
+          </Reorder.Group>
         </Table>
       </div>
     </div>
