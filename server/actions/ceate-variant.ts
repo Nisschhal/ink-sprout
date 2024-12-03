@@ -22,6 +22,7 @@ const client = algoliasearch(
   process.env.ALGOLIA_WRITE_API_KEY!
 );
 
+// create index for algolio to add products
 const algoliaIndex = "products";
 
 export const createVariant = action
@@ -39,6 +40,11 @@ export const createVariant = action
       },
     }) => {
       try {
+        // get the product for algolio
+        const product = await db.query.products.findFirst({
+          where: eq(products.id, productId),
+        });
+
         if (editMode && id) {
           const editVariant = await db
             .update(productVariants)
@@ -52,6 +58,8 @@ export const createVariant = action
             objectID: editVariant[0].id.toString(),
             attributesToUpdate: {
               id: editVariant[0].id,
+              title: product?.title,
+              price: product?.price,
               productType: editVariant[0].productType,
               variantImages: newImages[0].url,
             },
@@ -98,11 +106,6 @@ export const createVariant = action
               productId,
             })
             .returning();
-
-          // get the product for algolio
-          const product = await db.query.products.findFirst({
-            where: eq(products.id, newVariant[0].productId),
-          });
 
           await db.insert(variantTags).values(
             tags.map((tag) => ({
