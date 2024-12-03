@@ -101,9 +101,9 @@ export const columns: ColumnDef<ProductColumns>[] = [
       const variants = row.getValue("variants") as VariantsWithImagesTags[];
       console.log(variants);
       return (
-        <div className="">
+        <div className="flex gap-1 ">
           {variants.map((variant) => (
-            <div key={variant.id}>
+            <div key={variant.id} className="flex items-center">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -113,7 +113,7 @@ export const columns: ColumnDef<ProductColumns>[] = [
                       variant={variant}
                     >
                       <div
-                        className="rounde-full size-5 "
+                        className="rounded-full w-4 h-4"
                         key={variant.id}
                         style={{ backgroundColor: variant.color }}
                       />

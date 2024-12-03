@@ -223,20 +223,25 @@ export default function ProductVariant({
   const [open, setOpen] = useState(false);
 
   const setEdit = () => {
+    // form is new so reset() and return
     if (!editMode) {
       form.reset();
       return;
     }
+    // if the variant form is editMode get set the incoming data from the variant onto the corresponding form fields
     if (editMode && variant) {
       form.setValue("editMode", true);
       form.setValue("id", variant.id);
       form.setValue("productId", variant.productId);
       form.setValue("productType", variant.productType);
       form.setValue("color", variant.color);
+
+      // array the variantTags
       form.setValue(
         "tags",
         variant.variantTags.map((tag) => tag.tag)
       );
+      // array the variantImages
       form.setValue(
         "variantImages",
         variant.variantImages.map((img) => ({
@@ -248,10 +253,12 @@ export default function ProductVariant({
     }
   };
 
+  // load up the form fields if editMode
   useEffect(() => {
     setEdit();
   }, [variant]);
 
+  // spin up the server action
   const { execute, status } = useAction(createVariant, {
     onExecute() {
       toast.info("Creating variant...", { duration: 2000 });
@@ -282,9 +289,8 @@ export default function ProductVariant({
   //   },
   // });
 
+  // submit the form with values to server action
   function onSubmit(values: zVariantSchema) {
-    // Do something with the form values.
-    console.log(values, "values");
     execute(values);
   }
 
