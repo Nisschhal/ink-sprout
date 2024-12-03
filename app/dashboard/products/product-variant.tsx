@@ -193,6 +193,7 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { createVariant } from "@/server/actions/ceate-variant";
+import { deleteVariant } from "@/server/actions/delete-variant";
 
 type VariantProps = {
   children: React.ReactNode;
@@ -274,20 +275,20 @@ export default function ProductVariant({
     },
   });
 
-  // const variantAction = useAction(deleteVariant, {
-  //   onExecute() {
-  //     toast.loading("Deleting variant", { duration: 1 });
-  //     setOpen(false);
-  //   },
-  //   onSuccess({ data }) {
-  //     if (data?.error) {
-  //       toast.error(data.error);
-  //     }
-  //     if (data?.success) {
-  //       toast.success(data.success);
-  //     }
-  //   },
-  // });
+  const variantAction = useAction(deleteVariant, {
+    onExecute() {
+      toast.info("Deleting variant", { duration: 2000 });
+      setOpen(false);
+    },
+    onSuccess({ data }) {
+      if (data?.error) {
+        toast.error(data.error);
+      }
+      if (data?.success) {
+        toast.success(data.success);
+      }
+    },
+  });
 
   // submit the form with values to server action
   function onSubmit(values: zVariantSchema) {
@@ -357,10 +358,10 @@ export default function ProductVariant({
                 <Button
                   variant={"destructive"}
                   type="button"
-                  // disabled={variantAction.status === "executing"}
+                  disabled={variantAction.status === "executing"}
                   onClick={(e) => {
                     e.preventDefault();
-                    // variantAction.execute({ id: variant.id });
+                    variantAction.execute({ id: variant.id });
                   }}
                 >
                   Delete Variant

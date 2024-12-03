@@ -56,8 +56,6 @@ const ActionCell = ({ row }: { row: Row<ProductColumns> }) => {
 
   const product = row.original;
 
-  console.log("product", product);
-
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -99,7 +97,6 @@ export const columns: ColumnDef<ProductColumns>[] = [
     header: "Variants",
     cell: ({ row }) => {
       const variants = row.getValue("variants") as VariantsWithImagesTags[];
-      console.log(variants);
       return (
         <div className="flex gap-1 ">
           {variants.map((variant) => (
