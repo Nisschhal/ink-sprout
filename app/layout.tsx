@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "../components/navigations/Navbar";
 
-import { Inter } from "next/font/google";
+import { Inter, Roboto } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/theme-providers";
 
@@ -13,6 +13,11 @@ import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 // Toaster | Sonner
 import Toaster from "@/components/ui/toaster";
+
+const roboto = Roboto({
+  weight: ["400", "500", "700", "900"],
+  subsets: ["latin"],
+});
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ["latin"] });
@@ -29,11 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          `${inter.className}, antialiased px-6 md:px-12 max-w-7xl mx-auto`
-        )}
-      >
+      <body className={cn(`${roboto.className}, antialiased `)}>
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
 
         <ThemeProvider
@@ -42,9 +43,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavBar />
-          <Toaster />
-          {children}
+          <div className="flex-grow px-6 md:px-12 max-w-7xl mx-auto">
+            <NavBar />
+            <Toaster />
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>

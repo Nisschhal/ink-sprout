@@ -67,7 +67,6 @@ export default function ProductVariant({
     }
     // if the variant form is editMode get set the incoming data from the variant onto the corresponding form fields
     if (editMode && variant) {
-      console.log(variant, "variant");
       form.setValue("editMode", true);
       form.setValue("id", variant.id);
       form.setValue("productId", variant.productId);
@@ -135,7 +134,7 @@ export default function ProductVariant({
     // pass the mannual open state and the setter function to onOpenChange
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-[860px]">
+      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-[660px]  ">
         <DialogHeader>
           <DialogTitle>{editMode ? "Edit" : "Create"} your variant</DialogTitle>
           <DialogDescription>
