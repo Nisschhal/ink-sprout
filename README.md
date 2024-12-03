@@ -77,12 +77,95 @@ _Note: Don't forget to add AUTH_SECRET in `./server/auth.ts` by doing `npx auth 
 
 - Relation established with one to one and one to many on models
 
-# 7. Implementing Input Tags Component with props: value and onChange
+re! Here's a detailed README.md section for the InputTags component in Markdown format:
 
-- Created a new shadcn Input()
-- Passed down **props** **_value=field.value_** **_onChange={e => field.onChange(e)}_**
-- setFocus using useFormContext() when input clicked
-- 
+### 7. InputTags Component Implementation Details
+
+The `InputTags` component is used to manage a list of tags that can be added and removed dynamically. This implementation uses React hooks and animation for smooth transitions and a user-friendly experience.
+
+1. **Tag Management**
+
+   - Allows users to add tags by typing and pressing "Enter".
+   - Tags can be removed by clicking the "X" button next to each tag.
+
+2. **Dynamic Tag List**
+
+   - The tags are stored as an array of strings and displayed as badges.
+   - The list updates dynamically when tags are added or removed.
+
+3. **State Management**
+
+   - Uses `useState` to track the current input (`pendingDataPoint`) and whether the input field is focused (`focused`).
+   - The `value` prop is passed from the parent component, and the `onChange` function is used to update the list of tags.
+
+4. **Focus Management**
+
+   - The component sets focus on the input field when clicked using `useFormContext`'s `setFocus` method from `react-hook-form`.
+
+5. **Smooth Animations**
+
+   - Animations are handled with the `motion.div` from `motion/react` to provide a smooth enter and exit transition when adding or removing tags.
+
+6. **Input Field Behavior**
+
+   - On pressing "Enter", the current value is added as a new tag if it is non-empty.
+   - On pressing "Backspace" when the input field is empty, the last tag in the list is removed.
+
+7. **Customizable Props**
+
+   - The component accepts all `InputProps` from the `Input` component, including any styling or custom properties.
+
+8. **Styling**
+
+   - The component is styled using utility classes from Tailwind CSS, allowing for flexibility in layout and appearance.
+
+9. **Reusability**
+
+   - This component is highly reusable across different forms or interfaces requiring tag input.
+
+10. **Error Handling**
+    - The component can handle form validation errors seamlessly as part of the parent form's validation.
+
+### 8. Product Variant Implementation Details
+
+1. **Form Handling**
+
+   - Managed using `react-hook-form` with `zodResolver` for robust form validation and state management.
+
+2. **Dynamic Initialization**
+
+   - The form fields are pre-populated dynamically in `editMode` using incoming variant props.
+
+3. **UI Components**
+
+   - Built with reusable components like `Dialog`, `FormField`, `Input`, and `Button` for consistent styling and functionality.
+
+4. **Custom Inputs**
+
+   - Includes `InputTags` for managing tags and `VariantImages` for handling variant images.
+
+5. **Data Mapping**
+
+   - Maps `variantTags` and `variantImages` from the incoming data to form fields for seamless editing.
+
+6. **Server-Side Actions**
+
+   - Integrated server actions (`createVariant`, `deleteVariant`) to handle backend operations securely.
+
+7. **Real-Time Feedback**
+
+   - Provides user feedback with `sonner` toasts for success, error, and execution states.
+
+8. **State Management**
+
+   - Dialog visibility and `editMode` logic controlled using `useState` and `useEffect` hooks.
+
+9. **Customization**
+
+   - Includes fields for variant title, color picker, tags, and images to allow flexible configurations.
+
+10. **Validation and Messages**
+    - Ensures data accuracy with validation rules and displays errors or status updates using `FormMessage`.
 
 ## Installation
 
