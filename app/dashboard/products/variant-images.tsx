@@ -48,14 +48,13 @@ export default function VariantImages() {
       {/* Form field for selecting the variant color */}
       <FormField
         control={control}
-        name="color"
+        name="variantImages"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Variant Color</FormLabel>
+            <FormLabel>Variant Images</FormLabel>
             <FormControl>
               {/* UploadDropzone for uploading and handling files */}
               <UploadDropzone
-                {...field} // Spread the field props (React Hook Form manages this)
                 className="ut-allowed-content:text-secondary-foreground ut-label:text-primary ut-upload-icon:text-primary/50 hover:bg-primary/10 transition-all duration-500 ease-in-out border-secondary ut-button:bg-primary/75 ut-button:ut-readying:bg-secondary"
                 onUploadError={(error) => {
                   // Handle upload errors by setting a validation error on the form
@@ -63,6 +62,7 @@ export default function VariantImages() {
                     type: "validate",
                     message: error.message,
                   });
+                  return;
                 }}
                 onBeforeUploadBegin={(files) => {
                   // Before uploading files, map through them and append to fields
@@ -77,13 +77,13 @@ export default function VariantImages() {
                 }}
                 onClientUploadComplete={(files) => {
                   const images = getValues("variantImages");
-                  images.map((field, index) => {
+                  images.map((field, imgIDX) => {
                     if (field.url.search("blob:") === 0) {
                       const image = files.find(
                         (img) => img.name === field.name
                       );
                       if (image) {
-                        update(index, {
+                        update(imgIDX, {
                           url: image.url,
                           name: image.name,
                           size: image.size,

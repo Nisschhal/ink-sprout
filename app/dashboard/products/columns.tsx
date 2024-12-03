@@ -39,6 +39,7 @@ export type ProductColumns = {
 // Action cell Component to use with useAction
 
 const ActionCell = ({ row }: { row: Row<ProductColumns> }) => {
+  // delete the product row
   const { execute } = useAction(deleteProduct, {
     onSuccess: ({ data }) => {
       if (data?.error) {
@@ -52,7 +53,10 @@ const ActionCell = ({ row }: { row: Row<ProductColumns> }) => {
       toast.info("Product deleting...", { duration: 2000 });
     },
   });
+
   const product = row.original;
+
+  console.log("product", product);
 
   return (
     <DropdownMenu modal={false}>
@@ -95,7 +99,7 @@ export const columns: ColumnDef<ProductColumns>[] = [
     header: "Variants",
     cell: ({ row }) => {
       const variants = row.getValue("variants") as VariantsWithImagesTags[];
-
+      console.log(variants);
       return (
         <div className="">
           {variants.map((variant) => (
@@ -161,6 +165,7 @@ export const columns: ColumnDef<ProductColumns>[] = [
           alt={row.getValue("title")}
           width={64}
           height={64}
+          priority
           className="rounded-md"
         />
       );
