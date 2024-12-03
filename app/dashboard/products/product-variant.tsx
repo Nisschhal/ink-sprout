@@ -231,6 +231,7 @@ export default function ProductVariant({
     }
     // if the variant form is editMode get set the incoming data from the variant onto the corresponding form fields
     if (editMode && variant) {
+      console.log(variant, "variant");
       form.setValue("editMode", true);
       form.setValue("id", variant.id);
       form.setValue("productId", variant.productId);
@@ -245,11 +246,12 @@ export default function ProductVariant({
       // array the variantImages
       form.setValue(
         "variantImages",
-        variant.variantImages.map((img) => ({
-          name: img.name,
-          size: img.size,
-          url: img.url,
-        }))
+        // variant.variantImages.map((img) => ({
+        //   name: img.name,
+        //   size: img.size,
+        //   url: img.url,
+        // }))
+        variant.variantImages
       );
     }
   };
@@ -262,7 +264,9 @@ export default function ProductVariant({
   // spin up the server action
   const { execute, status } = useAction(createVariant, {
     onExecute() {
-      toast.info("Creating variant...", { duration: 2000 });
+      toast.info(`${editMode ? "Updating" : "Creating"} variant...`, {
+        duration: 2000,
+      });
       setOpen(false);
     },
     onSuccess({ data }) {

@@ -24,45 +24,40 @@ export const createVariant = action
     }) => {
       try {
         if (editMode && id) {
-          const editedVariant = await db
+          const editVariant = await db
             .update(productVariants)
-            .set({
-              color,
-              productType,
-              updated: new Date(),
-            })
+            .set({ color, productType, updated: new Date() })
+            .where(eq(productVariants.id, id))
             .returning();
 
-          // delete the old existing variantTags
+          // DELETE the old tags and INSERT THE INCOMING tags from the form
           await db
             .delete(variantTags)
-            .where(eq(variantTags.variantId, editedVariant[0].id));
-
-          // insert the new variantTags from the variantForm
+            .where(eq(variantTags.variantId, editVariant[0].id));
           await db.insert(variantTags).values(
             tags.map((tag) => ({
               tag,
-              variantID: editedVariant[0].id,
+              variantId: editVariant[0].id,
             }))
           );
 
-          // delete old existing variantImages and create a new one
+          // DELETE the old image and save the incoming image from the form
           await db
             .delete(variantImages)
-            .where(eq(variantImages.variantId, editedVariant[0].id));
+            .where(eq(variantImages.variantId, editVariant[0].id));
           await db.insert(variantImages).values(
             newImages.map((img, idx) => ({
               name: img.name,
               size: img.size,
               url: img.url,
-              variantId: editedVariant[0].id,
+              variantId: editVariant[0].id,
               order: idx,
             }))
           );
 
           // once everything done revalidate the cache
           revalidatePath("/dashboard/products");
-          return { success: `Edited ${productType} Successfully!` };
+          return { success: `Updated ${productType} Successfully!` };
         }
 
         // not a edit mode so create a new one
@@ -95,6 +90,7 @@ export const createVariant = action
           return { success: `Created ${productType} Successfully!` };
         }
       } catch (error) {
+        console.log("error while creating or updating variant", error);
         return { error: `Failed to create Variant! ` };
       }
     }
