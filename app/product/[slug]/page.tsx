@@ -1,6 +1,8 @@
 import ProductPick from "@/components/products/product-pick";
 import ProductShowcase from "@/components/products/product-showcase";
 import ProductType from "@/components/products/product-type";
+import Reviews from "@/components/reviews/reviews";
+import { ReviewsForm } from "@/components/reviews/reviews-form";
 import { Separator } from "@/components/ui/separator";
 import formatPrice from "@/lib/format-price";
 import { db } from "@/server";
@@ -81,7 +83,7 @@ export default async function ProductVariantDetails({
             dangerouslySetInnerHTML={{ __html: variant.products.description }}
           />
           {/* Available Colors based on the variant.product.productVariants */}
-          <p className="text-secondary-foreground my-2 font-medium">
+          <p className="text-secondary-foreground my-2 font-semibold">
             Available Colors
           </p>
           {/* List of colors */}
@@ -99,6 +101,7 @@ export default async function ProductVariantDetails({
               />
             ))}
           </div>
+          <Reviews productId={variant.productId} />
         </div>
       </section>
     </main>

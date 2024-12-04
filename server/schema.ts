@@ -216,6 +216,7 @@ export const reviews = pgTable(
   {
     id: serial("id").primaryKey(),
     rating: real("rating").notNull(),
+    comment: text("comment").notNull(),
     userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
