@@ -1,4 +1,5 @@
 import ProductPick from "@/components/products/product-pick";
+import ProductShowcase from "@/components/products/product-showcase";
 import ProductType from "@/components/products/product-type";
 import { Separator } from "@/components/ui/separator";
 import formatPrice from "@/lib/format-price";
@@ -54,23 +55,36 @@ export default async function ProductVariantDetails({
 
   return (
     <main>
-      <section>
+      <section className="flex flex-col lg:flex-row gap-4 lg:gap-12">
+        {/* Left Side: Images */}
         <div className="flex-1">
-          <h1>Images</h1>
+          <ProductShowcase varaints={variant.products.productVariants} />
         </div>
-        <div className="flex flex-col flex-1 gap-2">
-          <h2 className="">{variant.products.title}</h2>
+        {/* Right Side: Content */}
+        <div className="flex flex-col flex-1 ">
+          {/* Heading */}
+          <h2 className="text-2xl font-bold">{variant.products.title}</h2>
+          {/* Subheadig */}
           <div>
             <ProductType variants={variant.products.productVariants} />
           </div>
-          <Separator />
-          <p className="text-2xl font-medium">
+          {/* --------------- */}
+          <Separator className=" my-2" />
+          {/* --------------- */}
+
+          {/* Price */}
+          <p className="text-2xl font-medium py-2">
             {formatPrice(variant.products.price)}
           </p>
+          {/* Description as it is in Database using: dangerouslySetInnerHTML */}
           <div
             dangerouslySetInnerHTML={{ __html: variant.products.description }}
           />
-          <p className="text-secondary-foreground">Available Colors</p>
+          {/* Available Colors based on the variant.product.productVariants */}
+          <p className="text-secondary-foreground my-2 font-medium">
+            Available Colors
+          </p>
+          {/* List of colors */}
           <div className="flex gap-2">
             {variant.products.productVariants.map((prodVariant) => (
               <ProductPick
