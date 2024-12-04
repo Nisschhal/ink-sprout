@@ -117,24 +117,26 @@ export const columns: ColumnDef<ProductColumns>[] = [
                     </ProductVariant>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Add to library</p>
+                    <p>{`${variant.color} - ${variant.productType}`}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
           ))}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <ProductVariant editMode={false} productId={row.original.id}>
-                  <PlusCircle className="text-primary h-4 w-4" />
-                </ProductVariant>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Create a new variant</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className="flex">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <ProductVariant editMode={false} productId={row.original.id}>
+                    <PlusCircle className="text-primary h-4 w-4" />
+                  </ProductVariant>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Create a new variant</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       );
     },

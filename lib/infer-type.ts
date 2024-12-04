@@ -52,7 +52,7 @@ export type VariantsWithProduct = InferResultType<
   {
     variantImages: true; // Relation to include: variantImages
     variantTags: true; // Relation to include: variantTags
-    product: true; // Relation to include: product
+    products: true; // Relation to include: product
   }
 >;
 

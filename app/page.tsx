@@ -1,7 +1,19 @@
-export default function Home() {
+import Products from "@/components/products/products";
+import { db } from "@/server";
+
+export default async function Home() {
+  const productVariantsData = await db.query.productVariants.findMany({
+    with: {
+      variantImages: true,
+      variantTags: true,
+      products: true,
+    },
+    orderBy: (productVariants, { desc }) => [desc(productVariants.id)],
+  });
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1>HEllow from here</h1>
-    </div>
+    <main>
+      <Products variants={productVariantsData} />
+    </main>
   );
 }

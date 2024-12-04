@@ -102,6 +102,7 @@ export function UserButton({ user }: Session) {
                 <p className="dark:text-blue-400 text-secondary-foreground/75  text-yellow-600 mr-3">
                   {theme[0].toUpperCase() + theme.slice(1)} Mode
                 </p>
+
                 <Switch
                   checked={darkOn}
                   onCheckedChange={(value) => {
@@ -111,7 +112,7 @@ export function UserButton({ user }: Session) {
                     // if not then to light
                     if (!value) setTheme("light");
                   }}
-                ></Switch>
+                />
               </div>
             </DropdownMenuItem>
           )}
