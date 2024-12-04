@@ -2,7 +2,6 @@ import ProductPick from "@/components/products/product-pick";
 import ProductShowcase from "@/components/products/product-showcase";
 import ProductType from "@/components/products/product-type";
 import Reviews from "@/components/reviews/reviews";
-import { ReviewsForm } from "@/components/reviews/reviews-form";
 import { Separator } from "@/components/ui/separator";
 import formatPrice from "@/lib/format-price";
 import { db } from "@/server";

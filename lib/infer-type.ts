@@ -56,11 +56,11 @@ export type VariantsWithProduct = InferResultType<
   }
 >;
 
-// // Example: Query reviews with related user data
-// export type ReviewsWithUser = InferResultType<
-//   "reviews", // Table being queried: reviews
-//   { user: true } // Relation to include: user
-// >;
+// Example: Query reviews with related user data
+export type ReviewsWithUser = InferResultType<
+  "reviews", // Table being queried: reviews
+  { user: true } // Relation to include: user
+>;
 
 // // Example: Query orderProduct with nested relations
 // export type TotalOrders = InferResultType<

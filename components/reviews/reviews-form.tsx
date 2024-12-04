@@ -69,7 +69,6 @@ export function ReviewsForm({ productId }: { productId: number }) {
   function onSubmit(values: zReviewSchema) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
     execute({ comment: values.comment, rating: values.rating, productId });
   }
 

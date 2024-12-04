@@ -29,6 +29,7 @@
 - **UploadThings**: For image upload
 - **TipTap**: For Rich Text Editor
 - **Sonner**: For Notification Toast
+- **Date fns**: For Date manipulation
 
 ## Implementation Details (./server)
 
