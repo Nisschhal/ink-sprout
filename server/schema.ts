@@ -9,6 +9,7 @@ import {
   pgEnum,
   serial,
   real,
+  index,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -28,6 +29,14 @@ export const users = pgTable("user", {
   twoFactorEnabled: boolean("twoFactorEnabled").default(false),
   role: RoleEnum("roles").default("user"),
 });
+
+// ------------ Relation User to Reviews
+// User relation to review [one U - to - many R ]
+export const userRelations = relations(users, ({ many }) => ({
+  reviews: many(reviews, { relationName: "user_reviews" }),
+}));
+
+// ------------- Models Providers Account
 
 // ACCOUNT MODEL [GOOGLE || GITHUB]
 export const accounts = pgTable(
@@ -53,6 +62,8 @@ export const accounts = pgTable(
     }),
   })
 );
+
+// ------------- Models Token for Email
 
 // EMAIL TOKEN VERFICATION MODEL
 export const emailTokens = pgTable(
@@ -153,9 +164,10 @@ export const variantTags = pgTable("variantTags", {
 
 // ------------- RELATIONS -----------------
 
-// PRODUCTS RELATION to variants [one P - to - many V]
+// PRODUCTS RELATION to reviews && variants [one P - to - many V|R]
 export const productRelations = relations(products, ({ many }) => ({
   productVariants: many(productVariants, { relationName: "productVariants" }),
+  reviews: many(reviews, { relationName: "reviews" }),
 }));
 
 // PRODUCT VARIANTS RELATION to  product && variantImages [one V - to - one P] && [one V - to - many vI]
@@ -194,5 +206,42 @@ export const variantTagsRelation = relations(variantTags, ({ one }) => ({
     relationName: "variantTags",
     fields: [variantTags.variantId],
     references: [productVariants.id],
+  }),
+}));
+
+// ------------------------ Model & Relation ------------------
+// Review
+export const reviews = pgTable(
+  "reviews",
+  {
+    id: serial("id").primaryKey(),
+    rating: real("rating").notNull(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    productId: serial("productId")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    created: timestamp("created").defaultNow(),
+  },
+  (table) => {
+    return {
+      productIdx: index("productIdx").on(table.productId),
+      userIdx: index("userIdx").on(table.userId),
+    };
+  }
+);
+
+// Review Relation with user U [ one R - to - one U  ] and product P [one R - to - one P]
+export const reviewRelations = relations(reviews, ({ one }) => ({
+  user: one(users, {
+    fields: [reviews.userId],
+    references: [users.id],
+    relationName: "user_reviews",
+  }),
+  product: one(products, {
+    fields: [reviews.productId],
+    references: [products.id],
+    relationName: "reviews",
   }),
 }));
