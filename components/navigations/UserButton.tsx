@@ -36,14 +36,23 @@ export function UserButton({ user }: Session) {
     <div>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger>
-          <Avatar>
-            <AvatarImage
-              src={user?.image as string}
-              alt={user?.name as string}
-            />
-            <AvatarFallback>
-              <p className="font-bold">{user?.name?.charAt(0).toUpperCase()}</p>
-            </AvatarFallback>
+          <Avatar className="w-8 h-8">
+            {user.image && (
+              <Image
+                src={user.image!}
+                width={44}
+                height={44}
+                className="rounded-full "
+                alt="Profile pic"
+              />
+            )}
+            {!user.image && (
+              <AvatarFallback className="bg-primary/25">
+                <div className="font-bold">
+                  {user.name?.charAt(0).toUpperCase()}
+                </div>
+              </AvatarFallback>
+            )}
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64 p-6" align="end">
