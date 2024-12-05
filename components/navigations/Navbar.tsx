@@ -11,31 +11,27 @@ export default async function NavBar() {
   return (
     <header className="py-8">
       <nav>
-        <ul className="flex justify-between gap-3 items-center  ">
-          <li className=" ">
-            <Link href={"/"} aria-label="ink sprout logo">
+        <ul className="flex justify-between items-center md:gap-8 gap-4">
+          <li className="flex flex-1">
+            <Link href="/" aria-label="sprout and scribble logo">
               <Logo />
             </Link>
           </li>
-
-          <li className="relative ml-auto flex items-center hover:opacity-75 cursor-pointer ">
+          <li className="pb-2 relative flex items-center hover:bg-muted cursor-pointer">
             <CartDrawer />
           </li>
-
           {!session ? (
-            <li className="flex items-center">
-              <Button variant={"ghost"} asChild>
-                <Link href={"/auth/login"}>
-                  <LogIn /> <span>Login</span>
+            <li className="flex items-center justify-center">
+              <Button asChild>
+                <Link className="flex gap-2" href="/auth/login">
+                  <LogIn size={16} />
+                  <span>Login</span>
                 </Link>
               </Button>
             </li>
           ) : (
-            <li className="flex items-center">
-              <UserButton
-                user={session?.user}
-                expires={session?.expires as string}
-              />
+            <li className="flex items-center justify-center">
+              <UserButton expires={session?.expires} user={session?.user} />
             </li>
           )}
         </ul>

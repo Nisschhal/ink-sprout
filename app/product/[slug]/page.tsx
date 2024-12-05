@@ -1,3 +1,4 @@
+import AddCart from "@/components/cart/add-to-cart";
 import ProductPick from "@/components/products/product-pick";
 import ProductShowcase from "@/components/products/product-showcase";
 import ProductType from "@/components/products/product-type";
@@ -112,6 +113,7 @@ export default async function ProductVariantDetails({
               />
             ))}
           </div>
+          <AddCart />
           <Reviews productId={variant.productId} />
         </div>
       </section>

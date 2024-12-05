@@ -22,11 +22,11 @@ export default function Stars({
           )}
         />
       ))}
-      {totalReviews && (
+      {totalReviews ? (
         <span className="text-secondary-foreground font-bold text-sm ml-2">
           {totalReviews} reviews
         </span>
-      )}
+      ) : null}
     </div>
   );
 }

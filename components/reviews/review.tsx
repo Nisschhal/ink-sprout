@@ -9,7 +9,7 @@ export default function Review({ reviews }: { reviews: ReviewsWithUser[] }) {
   return (
     <motion.div className="flex flex-col gap-4">
       {reviews.map((review) => (
-        <Card key={review.id} className="p-2 border-2 border-purple-100">
+        <Card key={review.id} className="p-2  ">
           <div className="flex gap-2 items-center">
             {/* Avatar */}
             <Image
