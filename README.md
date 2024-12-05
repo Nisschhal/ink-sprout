@@ -30,6 +30,7 @@
 - **TipTap**: For Rich Text Editor
 - **Sonner**: For Notification Toast
 - **Date fns**: For Date manipulation
+- **Zustand**: For Global State Management
 
 ## Implementation Details (./server)
 
