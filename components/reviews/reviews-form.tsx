@@ -75,7 +75,7 @@ export function ReviewsForm({ productId }: { productId: number }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <div className="w-full mt-4">
+        <div className="w-full mt-4 lg:m-0">
           <Button className="font-medium w-full">Leave a review!</Button>
         </div>
       </PopoverTrigger>
@@ -88,7 +88,7 @@ export function ReviewsForm({ productId }: { productId: number }) {
               name="comment"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Leave your review</FormLabel>
+                  <FormLabel>Leave your review! 😊</FormLabel>
                   <FormControl>
                     <Textarea {...field} placeholder="How was the product?" />
                   </FormControl>
@@ -97,49 +97,51 @@ export function ReviewsForm({ productId }: { productId: number }) {
                 </FormItem>
               )}
             />
-
+  
             {/* Start Rating  */}
             <FormField
               control={form.control}
               name="rating"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Leave your Rating</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="hidden"
-                      {...field}
-                      placeholder="Star rating..."
-                    />
-                  </FormControl>
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((value) => (
-                      <motion.div
-                        key={value}
-                        className="relative cursor-pointer"
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.8 }}
-                      >
-                        <Star
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Leave your Rating! 😉</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="hidden"
+                        {...field}
+                        placeholder="Star rating..."
+                      />
+                    </FormControl>
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <motion.div
                           key={value}
-                          onClick={() =>
-                            form.setValue("rating", value, {
-                              shouldValidate: true,
-                            })
-                          }
-                          className={cn(
-                            "text-primary bg-transparent transition-all duration-300 ease-in-out",
-                            form.getValues("rating") >= value
-                              ? "fill-primary"
-                              : "fill-muted"
-                          )}
-                        />
-                      </motion.div>
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
+                          className="relative cursor-pointer"
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.8 }}
+                        >
+                          <Star
+                            key={value}
+                            onClick={() =>
+                              form.setValue("rating", value, {
+                                shouldValidate: true,
+                              })
+                            }
+                            className={cn(
+                              "text-primary bg-transparent transition-all duration-300 ease-in-out",
+                              form.getValues("rating") >= value
+                                ? "fill-primary"
+                                : "fill-muted"
+                            )}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
             />
             <Button
               disabled={status === "executing"}
