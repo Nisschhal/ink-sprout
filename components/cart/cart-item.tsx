@@ -36,6 +36,7 @@ export default function CartItems() {
     prevTotalPrice.current = totalPrice;
   }, [totalPrice]);
 
+  // for visual effect determine if price has increased
   const isPriceIncreased = totalPrice > prevTotalPrice.current;
 
   // get the array of price in object for animation
@@ -49,7 +50,7 @@ export default function CartItems() {
   return (
     <motion.div>
       {cart.length === 0 && (
-        <div className="flex-col w-full flex items-center justify-center">
+        <div className="flex-col w-full flex items-center justify-center text-center">
           <motion.div
             animate={{ opacity: 1 }}
             initial={{ opacity: 0 }}
@@ -59,7 +60,11 @@ export default function CartItems() {
               Your cart is empty
             </h2>
             {/* <Lottie options={defaultOptions} height={320} width={320} /> */}
-            <Lottie options={{ animationData: emptyCart }} />
+            <Lottie
+              options={{ animationData: emptyCart }}
+              height={320}
+              width={320}
+            />
             {/* <DotLottieReact src={"path/to/emptyCart"} loop autoplay /> */}
           </motion.div>
         </div>
@@ -134,16 +139,21 @@ export default function CartItems() {
         </div>
       )}
       {/* Price */}
-      <motion.div className="flex items-center justify-center relative overflow-hidden">
+      {/* set the overflow-hidden and box to relative for visual effect to work */}
+      <motion.div className="flex items-center justify-center relative overflow-hidden my-4">
         <span className="text-md">Total: $</span>
         <AnimatePresence mode="popLayout">
           {priceInLetters.map((letter, i) => (
             <motion.div key={letter.id}>
+              {/* // animate the letter either in increment or decrement */}
+              {/* to have effect span should be inline-block */}
               <motion.span
                 key={letter.id}
-                initial={{ y: isPriceIncreased ? 20 : -20 }}
+                initial={{
+                  y: isPriceIncreased || totalPrice === 0 ? 20 : -20,
+                }}
                 animate={{ y: 0 }}
-                exit={{ y: isPriceIncreased ? -20 : 20 }}
+                exit={{ y: isPriceIncreased || totalPrice === 0 ? -20 : 20 }}
                 transition={{ delay: i * 0.1 }}
                 className="text-md inline-block"
               >
