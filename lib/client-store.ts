@@ -16,6 +16,7 @@ export type CartItem = {
 export type CartState = {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
+  removeFromCart: (item: CartItem) => void;
 };
 
 // create a cart store with its type
@@ -63,6 +64,29 @@ export const useCartStore = create<CartState>((set) => ({
           ],
         };
       }
+    });
+  },
+  removeFromCart: (item) => {
+    set((state) => {
+      // When remove is triggered only quanity is updated
+      const updatedCart = state.cart.map((cartItem) => {
+        if (cartItem.variant.variantId === item.variant.variantId) {
+          return {
+            ...cartItem,
+            variant: {
+              ...cartItem.variant,
+              quantity: cartItem.variant.quantity - item.variant.quantity,
+            },
+          };
+        }
+        return cartItem;
+      });
+
+      // once the quanitity is updated check if it is greated than 0
+      // only add/filter out the item with quanity greater than 0
+      return {
+        cart: updatedCart.filter((cartItem) => cartItem.variant.quantity > 0),
+      };
     });
   },
 }));
