@@ -6,6 +6,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerHeader,
+  DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
 import { AnimatePresence, motion } from "motion/react";
@@ -31,9 +32,9 @@ export default function CartDrawer() {
         </div>
         <ShoppingBag className="w-7 h-7" />
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="min-h-96">
         <DrawerHeader>
-          <h1>Cart Stuff</h1>
+          <DrawerTitle>Cart Stuff</DrawerTitle>
         </DrawerHeader>
         <CartItems />
       </DrawerContent>

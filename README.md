@@ -31,6 +31,7 @@
 - **Sonner**: For Notification Toast
 - **Date fns**: For Date manipulation
 - **Zustand**: For Global State Management
+- **Lottiefiles** : For animated illustration
 
 ## Implementation Details (./server)
 

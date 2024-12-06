@@ -57,7 +57,7 @@ export default function AddCart() {
             price,
             variant: { quantity, variantId },
           });
-          toast.success(`Item  ${title} added to Cart! 👌🏼`);
+          toast.success(`Item  ${title} ${type} added to Cart! 👌🏼`);
         }}
       >
         Add to Cart
