@@ -34,6 +34,7 @@ export const users = pgTable("user", {
 // User relation to review [one U - to - many R ]
 export const userRelations = relations(users, ({ many }) => ({
   reviews: many(reviews, { relationName: "user_reviews" }),
+  orders: many(orders, { relationName: "user_orders" }),
 }));
 
 // ------------- Models Providers Account
@@ -244,5 +245,65 @@ export const reviewRelations = relations(reviews, ({ one }) => ({
     fields: [reviews.productId],
     references: [products.id],
     relationName: "reviews",
+  }),
+}));
+
+//------------- MODEL Order
+export const orders = pgTable("order", {
+  id: serial("id").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  total: real("total").notNull(),
+  status: text("status").notNull(),
+  created: timestamp("created").defaultNow(),
+  receiptURL: text("receiptURL"),
+});
+
+//Relation with User and orderProduct
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+    relationName: "user_orders",
+  }),
+  orderProduct: many(orderProduct, {
+    relationName: "orderProduct",
+  }),
+}));
+
+// -------- MODEL OrderProduct
+// get the product, and productVariant based on their id
+export const orderProduct = pgTable("orderProduct", {
+  id: serial("id").primaryKey(),
+  quantity: integer("quantity").notNull(),
+  productVariantId: serial("productVariantId")
+    .notNull()
+    .references(() => productVariants.id, { onDelete: "cascade" }),
+  orderId: serial("orderId")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  productId: serial("productId")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+});
+
+// OrderProduct Relation to order, products, and producVariant
+
+export const OrderProductRelations = relations(orderProduct, ({ one }) => ({
+  orders: one(orders, {
+    fields: [orderProduct.orderId],
+    references: [orders.id],
+    relationName: "orderProduct",
+  }),
+  products: one(products, {
+    fields: [orderProduct.productId],
+    references: [products.id],
+    relationName: "products",
+  }),
+  productVariants: one(productVariants, {
+    fields: [orderProduct.productVariantId],
+    references: [productVariants.id],
+    relationName: "productVariants",
   }),
 }));
