@@ -16,6 +16,12 @@ export default withUt({
           "20%,50%": { opacity: "0" },
         },
       },
+      maxWidth: {
+        "8xl": "88rem",
+      },
+      minHeight: {
+        "50vh": "50vh",
+      },
       animation: {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
       },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCartStore } from "@/lib/client-store";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   Table,
   TableBody,
@@ -15,10 +15,12 @@ import { MinusCircle, PlusCircle } from "lucide-react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import emptyCart from "@/public/emptyCart.json";
 import Lottie from "react-lottie";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+
 export default function CartItems() {
   const { cart, addToCart, removeFromCart } = useCartStore();
 
+  // GET THE TOTAL PRICE from all the cart item
   const totalPrice = useMemo(() => {
     return cart.reduce(
       (acc, item) => acc + item.price * item.variant.quantity,
@@ -26,8 +28,26 @@ export default function CartItems() {
     );
   }, [cart]);
 
+  // get the current total price
+  const prevTotalPrice = useRef(totalPrice);
+
+  // render if total price changes
+  useEffect(() => {
+    prevTotalPrice.current = totalPrice;
+  }, [totalPrice]);
+
+  const isPriceIncreased = totalPrice > prevTotalPrice.current;
+
+  // get the array of price in object for animation
+  const priceInLetters = useMemo(() => {
+    return [...totalPrice.toFixed(2).toString()].map((letter) => ({
+      letter,
+      id: crypto.randomUUID(),
+    }));
+  }, [totalPrice]);
+
   return (
-    <div>
+    <motion.div>
       {cart.length === 0 && (
         <div className="flex-col w-full flex items-center justify-center">
           <motion.div
@@ -39,11 +59,7 @@ export default function CartItems() {
               Your cart is empty
             </h2>
             {/* <Lottie options={defaultOptions} height={320} width={320} /> */}
-            <Lottie
-              options={{ animationData: emptyCart }}
-              height={180}
-              width={180}
-            />
+            <Lottie options={{ animationData: emptyCart }} />
             {/* <DotLottieReact src={"path/to/emptyCart"} loop autoplay /> */}
           </motion.div>
         </div>
@@ -117,6 +133,26 @@ export default function CartItems() {
           </Table>
         </div>
       )}
-    </div>
+      {/* Price */}
+      <motion.div className="flex items-center justify-center relative overflow-hidden">
+        <span className="text-md">Total: $</span>
+        <AnimatePresence mode="popLayout">
+          {priceInLetters.map((letter, i) => (
+            <motion.div key={letter.id}>
+              <motion.span
+                key={letter.id}
+                initial={{ y: isPriceIncreased ? 20 : -20 }}
+                animate={{ y: 0 }}
+                exit={{ y: isPriceIncreased ? -20 : 20 }}
+                transition={{ delay: i * 0.1 }}
+                className="text-md inline-block"
+              >
+                {letter.letter}
+              </motion.span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 }

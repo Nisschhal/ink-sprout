@@ -43,7 +43,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex-grow px-6 md:px-12 max-w-7xl mx-auto">
+          <div className="flex-grow px-6 md:px-12 max-w-8xl mx-auto">
             <NavBar />
             <Toaster />
             {children}
