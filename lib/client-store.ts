@@ -14,8 +14,15 @@ export type CartItem = {
   price: number;
 };
 
+export type CheckOutProgressType =
+  | "cart-page"
+  | "payment-page"
+  | "confirmation-page";
+
 export type CartState = {
   cart: CartItem[];
+  checkoutProgress: CheckOutProgressType;
+  setCheckoutProgress: (val: CheckOutProgressType) => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (item: CartItem) => void;
 };
@@ -25,9 +32,15 @@ export const useCartStore = create<CartState>()(
   devtools(
     persist(
       (set) => ({
-        // state
+        // state: cart: list of item
         cart: [],
-        // setter
+        // Checkout progress
+        checkoutProgress: "cart-page",
+
+        // checkoutprogress function
+        setCheckoutProgress: (val) =>
+          set((state) => ({ checkoutProgress: val })),
+        // setter: add item to cart list
         addToCart: (item) => {
           set((state) => {
             // check if carItem exist
@@ -72,6 +85,7 @@ export const useCartStore = create<CartState>()(
             }
           });
         },
+        // remove item from cart list
         removeFromCart: (item) => {
           set((state) => {
             // When remove is triggered only quanity is updated
