@@ -25,7 +25,9 @@ export type CartState = {
   setCheckoutProgress: (val: CheckOutProgressType) => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (item: CartItem) => void;
-  clearCart: () => void;
+  clearCart: (val: boolean) => void;
+  cartOpen: boolean;
+  setCartOpen: (val: boolean) => void;
 };
 
 // create a cart store with its type
@@ -38,9 +40,13 @@ export const useCartStore = create<CartState>()(
         // Checkout progress
         checkoutProgress: "cart-page",
 
+        // cartOpen status
+        cartOpen: false,
+
+        // cart open setter
+        setCartOpen: (val) => set({ cartOpen: val }),
         // checkoutprogress function
-        setCheckoutProgress: (val) =>
-          set((state) => ({ checkoutProgress: val })),
+        setCheckoutProgress: (val) => set({ checkoutProgress: val }),
         // setter: add item to cart list
         addToCart: (item) => {
           set((state) => {
