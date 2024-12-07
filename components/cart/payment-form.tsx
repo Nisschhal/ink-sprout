@@ -20,7 +20,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
 
   //  Stripe input elements
   const elements = useElements();
-  const { cart, setCheckoutProgress } = useCartStore();
+  const { cart, setCheckoutProgress, clearCart } = useCartStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,10 +31,12 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
       if (data?.error) {
         toast.error(data.error);
       }
+      // If order is created then get the drawer to confirmation page and clear the cart item
       if (data?.success) {
         toast.success(data.success);
         setIsLoading(false);
         setCheckoutProgress("confirmation-page");
+        clearCart();
       }
     },
   });

@@ -25,6 +25,7 @@ export type CartState = {
   setCheckoutProgress: (val: CheckOutProgressType) => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (item: CartItem) => void;
+  clearCart: () => void;
 };
 
 // create a cart store with its type
@@ -110,6 +111,11 @@ export const useCartStore = create<CartState>()(
               ),
             };
           });
+        },
+
+        // Set a new state:{} of empty cart list
+        clearCart() {
+          set({ cart: [] });
         },
       }),
       { name: "cart-storage" }
