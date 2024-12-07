@@ -200,11 +200,7 @@ The `InputTags` component is used to manage a list of tags that can be added and
 
    - Create `<form>` with **PaymentElment** | **AddressElement**, address takes **options** **_{mode: shipping | billing}_**
 
-6. Create **PaymentIntent**, when User wants to pay for something stripe requires  paymentintent which passess amount and product metadata. Though there are alternate to paymentintent, aka server action
- 
-
-
-
+6. Create **PaymentIntent**, when User wants to pay for something stripe requires paymentintent which passess amount and product metadata. Though there are alternate to paymentintent, aka server action and send the response to client using created **paymentIntent** such as **_paymentIntentId, clientSecretId, and user.email as metadata_**.
 
 ## Installation
 
