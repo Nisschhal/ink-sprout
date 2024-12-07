@@ -3,12 +3,11 @@
 import { useCartStore } from "@/lib/client-store";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { motion } from "motion/react";
 import orderedPackage from "@/public/order-package.json";
 import Lottie from "react-lottie";
 export default function OrderConfirmed() {
-  const { setCheckoutProgress } = useCartStore();
+  const { setCheckoutProgress, setCartOpen } = useCartStore();
   return (
     <div className="flex flex-col items-center gap-4">
       <h2 className="text-2xl font-medium">Thank your for your purchase!</h2>
@@ -18,6 +17,7 @@ export default function OrderConfirmed() {
           onClick={() => {
             // Get the Drawer back to cart page
             setCheckoutProgress("cart-page");
+            setCartOpen(false);
           }}
         >
           View your order
