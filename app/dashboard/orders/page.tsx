@@ -11,6 +11,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -121,7 +122,10 @@ export default async function OrderRoute() {
                         </Button>
                       </DropdownMenuTrigger>
                       {/* Dropdown Content | Modal */}
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent
+                        className="border bg-accent rounded-md "
+                        align="end"
+                      >
                         <DropdownMenuItem>
                           {/* Dialog Trigger */}
                           <DialogTrigger asChild>
@@ -137,48 +141,47 @@ export default async function OrderRoute() {
                       <DialogHeader>
                         <DialogTitle>Order Details #{order.id}</DialogTitle>
                       </DialogHeader>
-                      <Card>
-                        <Table>
-                          {/* Table Headings */}
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Image</TableHead>
-                              <TableHead>Price</TableHead>
-                              <TableHead>Product</TableHead>
-                              <TableHead>Color</TableHead>
-                              <TableHead>Quantity</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          {/* Table Body */}
-                          <TableBody>
-                            {order.orderProduct.map(
-                              ({ id, products, productVariants, quantity }) => (
-                                <TableRow key={id}>
-                                  <TableCell>
-                                    <Image
-                                      src={productVariants.variantImages[0].url}
-                                      alt={products.title}
-                                      width={48}
-                                      height={48}
-                                    />
-                                  </TableCell>
-                                  <TableCell>${products.price}</TableCell>
-                                  <TableCell>{products.title}</TableCell>
-                                  <TableCell>
-                                    <div
-                                      className="rounded-full h-4 w-4"
-                                      style={{
-                                        backgroundColor: productVariants.color,
-                                      }}
-                                    />
-                                  </TableCell>
-                                  <TableCell>{quantity}</TableCell>
-                                </TableRow>
-                              )
-                            )}
-                          </TableBody>
-                        </Table>
-                      </Card>
+                      <DialogDescription />
+                      <Table>
+                        {/* Table Headings */}
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Image</TableHead>
+                            <TableHead>Price</TableHead>
+                            <TableHead>Product</TableHead>
+                            <TableHead>Color</TableHead>
+                            <TableHead>Quantity</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        {/* Table Body */}
+                        <TableBody>
+                          {order.orderProduct.map(
+                            ({ id, products, productVariants, quantity }) => (
+                              <TableRow key={id}>
+                                <TableCell>
+                                  <Image
+                                    src={productVariants.variantImages[0].url}
+                                    alt={products.title}
+                                    width={48}
+                                    height={48}
+                                  />
+                                </TableCell>
+                                <TableCell>${products.price}</TableCell>
+                                <TableCell>{products.title}</TableCell>
+                                <TableCell>
+                                  <div
+                                    className="rounded-full h-4 w-4"
+                                    style={{
+                                      backgroundColor: productVariants.color,
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell>{quantity}</TableCell>
+                              </TableRow>
+                            )
+                          )}
+                        </TableBody>
+                      </Table>
                     </DialogContent>
                   </Dialog>
                 </TableCell>

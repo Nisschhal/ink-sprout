@@ -6,7 +6,6 @@ import {
   Drawer,
   DrawerContent,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
 import { AnimatePresence, motion } from "motion/react";
@@ -35,7 +34,7 @@ export default function CartDrawer() {
         </div>
         <ShoppingBag className="w-7 h-7" />
       </DrawerTrigger>
-      <DrawerContent className="min-h-50vh">
+      <DrawerContent className="fixed bottom-0 left-0 max-h-[70vh] min-h-[50vh]">
         <DrawerHeader>
           <CartMessage />
         </DrawerHeader>
