@@ -23,8 +23,8 @@ export default function Payment() {
         stripe={stripe}
         options={{
           mode: "payment",
-          currency: "USD",
-          amount: totalPrice,
+          currency: "usd",
+          amount: totalPrice * 100,
         }}
       >
         <PaymentForm totalPrice={totalPrice} />

@@ -32,6 +32,7 @@
 - **Date fns**: For Date manipulation
 - **Zustand**: For Global State Management
 - **Lottiefiles** : For animated illustration
+- **Stripe** : For payment
 
 ## Implementation Details (./server)
 
@@ -169,6 +170,41 @@ The `InputTags` component is used to manage a list of tags that can be added and
 
 10. **Validation and Messages**
     - Ensures data accuracy with validation rules and displays errors or status updates using `FormMessage`.
+
+### 9. Stripe Implementationa
+
+1. Sign up to stripe account and get the **public** and **secret** keys and store in **.evn** file
+
+2. Install 3 different packages:
+
+   ```
+   npm i @stripe/react-stripe-js @stripe/stripe-js stripe
+
+   ```
+
+3. Create a lib/get-stirpe.ts and export Stripe using **public** key for initialization on need
+
+4. Create **Payment** Component using **Elements** from **_@stripe/react-stripe-js_** which takes the exported **stripe** init and its **options**: **_mode, currency, amount_** for payment.
+
+5. Create **PaymentForm** Component For **Elements** wrapper. Once, **Element** wrapper is covered, **PaymentForm** now can use various hooks to work with stripe.
+
+   > **Hooks:** from **_@stripe/react-stripe-js_**
+
+   - **stripe** from **useStripe()**
+   - **elements** from **useElements()**
+   - **cart** from zustand **useCartStore()**
+
+   > Modules from **_@stripe/react-stripe-js_**
+
+   - **PaymentElment** | **AddressElement** for form
+
+   - Create `<form>` with **PaymentElment** | **AddressElement**, address takes **options** **_{mode: shipping | billing}_**
+
+6. Create **PaymentIntent**, when User wants to pay for something stripe requires  paymentintent which passess amount and product metadata. Though there are alternate to paymentintent, aka server action
+ 
+
+
+
 
 ## Installation
 
