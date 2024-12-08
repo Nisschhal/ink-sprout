@@ -202,6 +202,20 @@ The `InputTags` component is used to manage a list of tags that can be added and
 
 6. Create **PaymentIntent**, when User wants to pay for something stripe requires paymentintent which passess amount and product metadata. Though there are alternate to paymentintent, aka server action and send the response to client using created **paymentIntent** such as **_paymentIntentId, clientSecretId, and user.email as metadata_**.
 
+7. **Webhook** for stripe payment success and trigger `api/stripe/route.ts`
+
+   - install stripe cli and configure
+     - window: download cli zip, extract and add file to env path to system
+   - follow:
+
+     > stripe login
+
+     > authenticate to stripe.com and add the webhook secret to .env file
+
+     > stripe listen --forward-to localhost:3000/api/stripe
+
+   - Create **api/stripe/route.ts** and copty the code from codebase for POST method to update the order table in db to add succeeded status and receipt url
+
 ## Installation
 
 1. Clone the repository:

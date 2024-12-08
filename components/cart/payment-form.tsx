@@ -70,7 +70,6 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
       })),
     });
 
-    console.log("server Result", serverResult);
 
     // IF success response then create a payment on stripe
     if (serverResult?.data?.success) {
