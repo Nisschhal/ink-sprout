@@ -14,7 +14,7 @@ export const createPaymentIntent = action
   .schema(paymentIntentSchema)
   .action(async ({ parsedInput: { amount, cart, currency } }) => {
     const session = await auth();
-    console.log()
+    console.log();
     if (!session) return { error: "Please login to continue!" };
     if (!amount) return { error: "No Product to checkout!" };
 

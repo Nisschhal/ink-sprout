@@ -259,6 +259,7 @@ export const orders = pgTable("order", {
   status: text("status").notNull(),
   created: timestamp("created").defaultNow(),
   receiptURL: text("receiptURL"),
+  paymentIntentId: text("paymentIntentId"),
 });
 
 //Relation with User and orderProduct

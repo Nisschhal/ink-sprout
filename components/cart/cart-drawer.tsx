@@ -14,6 +14,7 @@ import CartMessage from "./cart-message";
 import Payment from "./payment";
 import OrderConfirmed from "./order-confirmation";
 
+
 export default function CartDrawer() {
   const { cart, checkoutProgress, cartOpen, setCartOpen } = useCartStore();
 

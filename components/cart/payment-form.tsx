@@ -70,6 +70,8 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
       })),
     });
 
+    console.log("server Result", serverResult);
+
     // IF success response then create a payment on stripe
     if (serverResult?.data?.success) {
       // when server action is done confirm with stripe and save the order to db
@@ -92,6 +94,7 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         execute({
           status: "pending",
           total: totalPrice,
+          paymentIntentId: serverResult.data.success.paymentIntentId,
           products: cart.map((item) => ({
             productId: item.id,
             variantId: item.variant.variantId,
