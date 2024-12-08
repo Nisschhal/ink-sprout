@@ -39,6 +39,7 @@ import { formatDistance, subHours } from "date-fns";
 import { eq } from "drizzle-orm";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function OrderRoute() {
@@ -97,8 +98,8 @@ export default async function OrderRoute() {
                   <Badge
                     className={
                       order.status === "succeeded"
-                        ? "bg-green-700"
-                        : "bg-secondary-foreground"
+                        ? "bg-green-700 hover:bg-green-800"
+                        : "bg-yellow-700 hover:bg-yellow-800"
                     }
                   >
                     {order.status}
@@ -132,6 +133,15 @@ export default async function OrderRoute() {
                             <Button variant="ghost">View Details</Button>
                           </DialogTrigger>
                         </DropdownMenuItem>
+                        {order.receiptURL ? (
+                          <DropdownMenuItem>
+                            <Button variant="ghost">
+                              <Link href={order.receiptURL} target="_blank">
+                                Download Receipt
+                              </Link>
+                            </Button>
+                          </DropdownMenuItem>
+                        ) : null}
                       </DropdownMenuContent>
                     </DropdownMenu>
 
@@ -139,9 +149,13 @@ export default async function OrderRoute() {
                     <DialogContent>
                       {/* Dialog Header */}
                       <DialogHeader>
-                        <DialogTitle>Order Details #{order.id}</DialogTitle>
+                        <DialogTitle className="text-center">
+                          Order Details #{order.id}
+                        </DialogTitle>
                       </DialogHeader>
-                      <DialogDescription />
+                      <DialogDescription className="text-center">
+                        Your order total is: ${order.total}
+                      </DialogDescription>
                       <Table>
                         {/* Table Headings */}
                         <TableHeader>
