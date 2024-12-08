@@ -237,7 +237,7 @@ export const reviews = pgTable(
 
 // Review Relation with user U [ one R - to - one U  ] and product P [one R - to - one P]
 export const reviewRelations = relations(reviews, ({ one }) => ({
-  user: one(users, {
+  users: one(users, {
     fields: [reviews.userId],
     references: [users.id],
     relationName: "user_reviews",
@@ -264,7 +264,7 @@ export const orders = pgTable("order", {
 
 //Relation with User and orderProduct
 export const ordersRelations = relations(orders, ({ one, many }) => ({
-  user: one(users, {
+  users: one(users, {
     fields: [orders.userId],
     references: [users.id],
     relationName: "user_orders",
