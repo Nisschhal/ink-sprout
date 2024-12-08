@@ -55,11 +55,12 @@ export default function Sales({ totalOrders }: { totalOrders: TotalOrders[] }) {
                       <div className="flex gap-2 items-center ">
                         <Image
                           src={orders.users.image}
-                          alt={orders.users.name}
-                          height={25}
-                          width={25}
-                          className="rounded-full"
+                          width={44}
+                          height={44}
+                          className="rounded-full "
+                          alt="Profile pic"
                         />
+
                         <p className="text-sm font-medium">
                           {orders.users.name}
                         </p>
@@ -68,11 +69,12 @@ export default function Sales({ totalOrders }: { totalOrders: TotalOrders[] }) {
                       <div className="flex gap-2 items-center ">
                         <Image
                           src={placeholder.src}
-                          alt="user not found"
-                          height={25}
-                          width={25}
-                          className="rounded-full"
+                          width={44}
+                          height={44}
+                          className="rounded-full "
+                          alt="Profile pic"
                         />
+
                         <p className="text-sm font-medium">
                           {orders.users.name}
                         </p>

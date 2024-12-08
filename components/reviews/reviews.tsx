@@ -9,7 +9,7 @@ export default async function Reviews({ productId }: { productId: number }) {
   const reviewsData = await db.query.reviews.findMany({
     where: eq(reviews.productId, productId),
     orderBy: [desc(reviews.created)],
-    with: { user: true },
+    with: { users: true },
   });
 
   return (

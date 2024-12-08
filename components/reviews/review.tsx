@@ -16,7 +16,7 @@ export default function Review({ reviews }: { reviews: ReviewsWithUser[] }) {
           <div className="flex gap-2 items-center">
             {/* Avatar */}
             <Image
-              src={review.user.image!}
+              src={review.users.image!}
               width={36}
               height={36}
               className="rounded-full "
@@ -26,7 +26,7 @@ export default function Review({ reviews }: { reviews: ReviewsWithUser[] }) {
             <div className="flex flex-col">
               {/* Name and time */}
               <p className="text-sm font-bold">
-                {review.user.name}
+                {review.users.name}
                 <span className="ml-2 text-xs text-bold text-muted-foreground">
                   ({formatDistance(subDays(review.created!, 0), new Date())}{" "}
                   ago)
