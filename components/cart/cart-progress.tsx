@@ -11,7 +11,7 @@ export default function CartProgress() {
       <div className="w-64 h-3 bg-muted rounded-md relative border ">
         {/* Steps:Icons Container */}
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between">
-          {/* Progress bar */}
+          {/* Progress bar --------- ----------- ---------- */}
           <motion.span
             className="absolute bg-primary rounded-full top-0 left-0 h-full z-30 "
             initial={{ width: 0 }}
@@ -24,7 +24,7 @@ export default function CartProgress() {
                   : "100%",
             }}
           />
-          {/* Shopping Cart */}
+          {/* ICON Shopping Cart */}
           <motion.div
             className=" bg-primary rounded-full p-2 z-50"
             initial={{ scale: 0 }}
@@ -40,7 +40,7 @@ export default function CartProgress() {
           >
             <ShoppingCart className="text-white" size={14} />
           </motion.div>
-          {/* Payment Process */}
+          {/* ICON Payment Process */}
           <motion.div
             className=" bg-primary rounded-full p-2 z-50"
             initial={{ scale: 0 }}
@@ -55,7 +55,7 @@ export default function CartProgress() {
           >
             <CreditCard className="text-white" size={14} />
           </motion.div>
-          {/* Order Confirmed */}
+          {/* ICON Order Confirmed */}
           <motion.div
             className=" bg-primary rounded-full p-2 z-50"
             initial={{ scale: 0 }}
