@@ -12,27 +12,36 @@
 ## Technologies Used
 
 - **Frontend**: Next.js, TailwindCSS
+
   - **React Icons**
   - **React Hook Form**
   - **@hookform/resolvers**: to pass the form data to zod for validation
   - **Zod**: for form Validation schemas
+  - **Recharts**: For Analytics bar graph
+  - **Zustand**: For Global State Management
+  - **Lottiefiles** : For animated illustration
+  - **TipTap**: For Rich Text Editor
+  - **UploadThings**: For image upload
+
 - **Backend**:
+
   - **Drizzle with PostgreSQL**: for database
-  - **NeonDb**: for serveless db
-  - **Next Safe Action**: for
+  - **NeonDb**: for serveless PostgreSQL database
+  - **Next Safe Action**: for server actions
   - **Bcrypt**: To hash register password
+  - **Zod**: for form Validation schemas
   - **Resend**: For EmailVerification and its stuff.
+  - **Date fns**: For Date manipulation
+
 - **Database**: PostgreSQL with Drizzle and Neondb server
+
 - **Payment Processing**: Stripe
-- **State Management**: Redux (or Context API)
+
+- **State Management**: Zustand
+
 - **Deployment**: Vercel for frontend, Heroku for backend (or choose based on preference)
-- **UploadThings**: For image upload
-- **TipTap**: For Rich Text Editor
+
 - **Sonner**: For Notification Toast
-- **Date fns**: For Date manipulation
-- **Zustand**: For Global State Management
-- **Lottiefiles** : For animated illustration
-- **Stripe** : For payment
 
 ## Implementation Details (./server)
 
@@ -216,7 +225,9 @@ The `InputTags` component is used to manage a list of tags that can be added and
 
    - Create **api/stripe/route.ts** and copty the code from codebase for POST method to update the order table in db to add succeeded status and receipt url
 
-## Installation
+### 10. Recharts
+
+## Installation 
 
 1. Clone the repository:
    ```bash

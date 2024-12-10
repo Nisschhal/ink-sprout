@@ -21,12 +21,12 @@ import Image from "next/image";
 import placeholder from "@/public/placeholder_user.jpg";
 export default function Sales({ totalOrders }: { totalOrders: TotalOrders[] }) {
   return (
-    <Card>
+    <Card className="flex-1 shrink-0">
       <CardHeader>
         <CardTitle>New sales</CardTitle>
         <CardDescription>Here are your recent sales</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-96 overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -52,15 +52,14 @@ export default function Sales({ totalOrders }: { totalOrders: TotalOrders[] }) {
                 <TableRow key={id}>
                   <TableCell className="font-medium">
                     {orders.users.image && orders.users.name ? (
-                      <div className="flex gap-2 items-center ">
+                      <div className="flex gap-2 w-32 items-center ">
                         <Image
-                          src={orders.users.image}
-                          width={44}
-                          height={44}
+                          src={orders?.users?.image}
+                          width={24}
+                          height={24}
                           className="rounded-full "
                           alt="Profile pic"
                         />
-
                         <p className="text-sm font-medium">
                           {orders.users.name}
                         </p>
@@ -69,12 +68,11 @@ export default function Sales({ totalOrders }: { totalOrders: TotalOrders[] }) {
                       <div className="flex gap-2 items-center ">
                         <Image
                           src={placeholder.src}
-                          width={44}
-                          height={44}
+                          width={24}
+                          height={24}
                           className="rounded-full "
                           alt="Profile pic"
                         />
-
                         <p className="text-sm font-medium">
                           {orders.users.name}
                         </p>
