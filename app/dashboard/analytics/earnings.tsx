@@ -32,26 +32,46 @@ export default function Earnings({
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") || "week";
 
+  // Get the list of date and revenue object from totalOrders
   const chartItems = totalOrders.map((order) => ({
     date: order.orders.created!,
     revenue: order.orders.total,
   }));
 
+  // chart Date : Weekly || Monthly
   const activeCharts = useMemo(() => {
+    // Extract data and revenue object that is within this week from chartItems
     const weekly = weeklyChart(chartItems);
+    // Extract data and revenue object that is within this month from chartItems
     const monthly = monthlyChart(chartItems);
+    // return list of data within this week
     if (filter === "week") {
       return weekly;
     }
+    // return list of data within this month
     if (filter === "month") {
       return monthly;
     }
   }, [filter]);
 
+  // totalPrice: Weekly || Monthly
+  const activeTotal = useMemo(() => {
+    // if montly active then reduce total price from this monthChart data
+    if (filter === "month") {
+      return monthlyChart(chartItems).reduce(
+        (acc, item) => acc + item.revenue,
+        0
+      );
+    }
+
+    // else reduct total price from this weekly data
+    return weeklyChart(chartItems).reduce((acc, item) => acc + item.revenue, 0);
+  }, [filter]);
+
   return (
     <Card className="flex-1 shrink-0 h-full">
       <CardHeader>
-        <CardTitle>Your Revenue: 0</CardTitle>
+        <CardTitle>Your Revenue: ${activeTotal}</CardTitle>
         <CardDescription>Here are your recent earnings</CardDescription>
         <div className="flex items-center gap-2">
           <Badge

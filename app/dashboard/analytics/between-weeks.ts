@@ -6,9 +6,6 @@ export default function betweenWeeks(
   // Get today's date and time
   const today = new Date();
 
-  // Reset today's time to midnight (00:00:00) to focus only on the date part.
-  today.setHours(0, 0, 0, 0);
-
   // Create a copy of today's date for the first target date
   const targetDate1 = new Date(today);
 
