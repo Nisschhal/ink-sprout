@@ -22,6 +22,7 @@
   - **Lottiefiles** : For animated illustration
   - **TipTap**: For Rich Text Editor
   - **UploadThings**: For image upload
+  - **Algolio**: For Optimized Search
 
 - **Backend**:
 
@@ -227,7 +228,14 @@ The `InputTags` component is used to manage a list of tags that can be added and
 
 ### 10. Recharts
 
-## Installation 
+- Follow https://recharts.org/en-US/examples/SimpleBarChart
+
+### 11. Algolia
+
+- Install `react-instantsearch` and `react-instantsearch-nextjs`
+- 
+
+## Installation
 
 1. Clone the repository:
    ```bash
