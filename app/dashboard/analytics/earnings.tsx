@@ -22,6 +22,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { monthlyChart } from "./monthly-chart";
 export default function Earnings({
   totalOrders,
 }: {
@@ -38,8 +39,12 @@ export default function Earnings({
 
   const activeCharts = useMemo(() => {
     const weekly = weeklyChart(chartItems);
-    if (filter == "week") {
+    const monthly = monthlyChart(chartItems);
+    if (filter === "week") {
       return weekly;
+    }
+    if (filter === "month") {
+      return monthly;
     }
   }, [filter]);
 

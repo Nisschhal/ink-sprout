@@ -1,35 +1,29 @@
-import checkDate from "./check-date";
+import betweenWeeks from "./between-weeks";
 
-export const weeklyChart = (chartItems: { date: Date; revenue: number }[]) => {
+export const monthlyChart = (chartItems: { date: Date; revenue: number }[]) => {
   return [
-    {
-      date: "4 weeks ago",
-      revenue: chartItems
-        .filter((order) => checkDate(order.date, 6))
-        .reduce((acc, price) => acc + price.revenue, 0),
-    },
     {
       date: "3 weeks ago",
       revenue: chartItems
-        .filter((order) => checkDate(order.date, 5))
+        .filter((order) => betweenWeeks(order.date, 28, 21))
         .reduce((acc, price) => acc + price.revenue, 0),
     },
     {
       date: "2 weeks ago",
       revenue: chartItems
-        .filter((order) => checkDate(order.date, 4))
+        .filter((order) => betweenWeeks(order.date, 21, 14))
         .reduce((acc, price) => acc + price.revenue, 0),
     },
     {
       date: "1 weeks ago",
       revenue: chartItems
-        .filter((order) => checkDate(order.date, 3))
+        .filter((order) => betweenWeeks(order.date, 14, 7))
         .reduce((acc, price) => acc + price.revenue, 0),
     },
     {
       date: "this week",
       revenue: chartItems
-        .filter((order) => checkDate(order.date, 2))
+        .filter((order) => betweenWeeks(order.date, 7, 0))
         .reduce((acc, price) => acc + price.revenue, 0),
     },
   ];
