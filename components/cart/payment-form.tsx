@@ -9,9 +9,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { Button } from "../ui/button";
 import React, { useState } from "react";
-import { createPaymentIntent } from "@/server/actions/product/stripe/create-payment-intent";
+import { createPaymentIntent } from "@/server/actions/stripe/create-payment-intent";
 import { useAction } from "next-safe-action/hooks";
-import { createOrder } from "@/server/actions/product/stripe/create-order";
+import { createOrder } from "@/server/actions/stripe/create-order";
 import { toast } from "sonner";
 
 export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
@@ -69,7 +69,6 @@ export default function PaymentForm({ totalPrice }: { totalPrice: number }) {
         image: item.image,
       })),
     });
-
 
     // IF success response then create a payment on stripe
     if (serverResult?.data?.success) {
