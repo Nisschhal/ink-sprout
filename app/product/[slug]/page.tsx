@@ -45,7 +45,7 @@ export default async function ProductVariantDetails({
         with: {
           reviews: true,
           productVariants: {
-            with: { variantTags: true, variantImages: true },
+            with: { variantImages: true, variantTags: true },
           },
         },
       },
@@ -69,7 +69,7 @@ export default async function ProductVariantDetails({
       <section className="flex flex-col lg:flex-row gap-4 lg:gap-12">
         {/* Left Side: Images */}
         <div className="flex-1">
-          <ProductShowcase varaints={variant.products.productVariants} />
+          <ProductShowcase variants={variant.products.productVariants} />
         </div>
         {/* Right Side: Content */}
         <div className="flex flex-col flex-1 ">

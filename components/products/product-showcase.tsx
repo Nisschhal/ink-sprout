@@ -15,16 +15,16 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export default function ProductShowcase({
-  varaints,
+  variants,
 }: {
-  varaints: VariantsWithImagesTags[];
+  variants: VariantsWithImagesTags[];
 }) {
   const [api, setApi] = useState<CarouselApi>();
 
   // state is list because api on 'slideInView' event gives the list of index of image
   const [activeThumbnail, setActiveThumbnail] = useState([0]);
   const searchParams = useSearchParams();
-  const selectedColor = searchParams.get("type") || varaints[0].productType;
+  const selectedColor = searchParams.get("type") || variants[0].productType;
 
   useEffect(() => {
     if (!api) return;
@@ -42,7 +42,7 @@ export default function ProductShowcase({
   return (
     <Carousel setApi={setApi} opts={{ loop: true }}>
       <CarouselContent>
-        {varaints.map(
+        {variants.map(
           (variant) =>
             variant.productType === selectedColor &&
             variant.variantImages.map((image, index) => (
@@ -62,7 +62,7 @@ export default function ProductShowcase({
       </CarouselContent>
       {/* List of all images */}
       <div className="flex overflow-clip gap-4 py-2">
-        {varaints.map(
+        {variants.map(
           (variant) =>
             variant.productType === selectedColor &&
             variant.variantImages.map((image, index) => (
