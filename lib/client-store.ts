@@ -128,3 +128,41 @@ export const useCartStore = create<CartState>()(
     )
   )
 );
+
+// Algorithm to manage the cart store:
+
+// 1. **Initialize State:**
+//    - cart: An empty array to store cart items (initially).
+//    - checkoutProgress: Set to "cart-page" to track the current step of the checkout process.
+//    - cartOpen: Boolean to track whether the cart is visible or hidden (initialized to false).
+
+// 2. **Add Item to Cart (addToCart function):**
+//    - Check if the item already exists in the cart by comparing the variantId of the item.
+//    - If the item exists:
+//      - Find the existing item in the cart.
+//      - Update the item's quantity by adding the new quantity to the current quantity.
+//    - If the item doesn't exist:
+//      - Add the new item to the cart with the specified quantity.
+
+// 3. **Remove Item from Cart (removeFromCart function):**
+//    - Check if the item exists in the cart by comparing the variantId.
+//    - If found, reduce the quantity of the item by subtracting the quantity to be removed.
+//    - If the item's quantity becomes zero or negative:
+//      - Remove the item from the cart.
+//    - Otherwise, keep the item with the updated quantity.
+
+// 4. **Clear Cart (clearCart function):**
+//    - Reset the cart state to an empty array, effectively clearing all items from the cart.
+
+// 5. **Update Checkout Progress (setCheckoutProgress function):**
+//    - Update the checkoutProgress state to the new value, which could be "cart-page", "payment-page", or "confirmation-page".
+
+// 6. **Toggle Cart Visibility (setCartOpen function):**
+//    - Set the cartOpen state to the provided value (true or false), controlling the visibility of the cart.
+
+// 7. **Persist State (persist middleware):**
+//    - Store the cart data in local storage under the key "cart-storage" to persist the cart state across page reloads.
+//    - Ensure that the cart state (cart items, checkout progress, and cart visibility) is saved and can be retrieved later.
+
+// 8. **DevTools (devtools middleware):**
+//    - Enable debugging and tracking of state changes in the cart store using Zustand DevTools for a better development experience.

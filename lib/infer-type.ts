@@ -77,3 +77,86 @@ export type TotalOrders = InferResultType<
     };
   }
 >;
+
+/**
+ * // Algorithm for handling query result types with Drizzle ORM:
+
+// 1. **Import Necessary Types:**
+//    - Import types such as `BuildQueryResult`, `DBQueryConfig`, and `ExtractTablesWithRelations` from Drizzle ORM.
+//    - These types help define how to construct queries, include relationships, and extract the schema's structure.
+
+// 2. **Define Schema Type:**
+//    - Import the schema that contains all the table definitions (e.g., `products`, `productVariants`, etc.) from `@/server/schema`.
+//    - Create a `Schema` type that infers the schema structure from the imported schema object.
+//    - Extract table structures and their relationships using `ExtractTablesWithRelations<Schema>` to create the `TSchema` type.
+//    - This allows you to reference and query specific tables and relationships in the database.
+
+// 3. **Define IncludeRelation Utility Type:**
+//    - `IncludeRelation` is a utility type that helps define which relations to include in a query.
+//    - It accepts:
+      // - `TableName` (name of the table being queried).
+      // - The relation type: `one` for one-to-one, `many` for one-to-many.
+      // - A boolean to indicate whether the relation is required or optional.
+      // - The full schema and the specific table to include the relations for.
+    // - This allows you to specify which relations to fetch alongside the main query result, making queries more efficient by fetching related data in one go.
+
+// 4. **Define InferResultType Utility Type:**
+//    - `InferResultType` is used to infer the query result type based on the table being queried and the included relations.
+//    - It accepts:
+      // - `TableName`: The name of the table being queried.
+      // - `With`: The relations to include in the query result (optional).
+    // - The type will be generated based on the provided table and its relationships, including nested relations if specified.
+//    - The final query result type is constructed based on the schema, the table being queried, and any included relations.
+
+
+// 5. **Examples of Query Types:**
+
+    // Example 1: **Variants with Images and Tags**
+    // - Query `productVariants` with its related `variantImages` and `variantTags`.
+    export type VariantsWithImagesTags = InferResultType<
+      "productVariants",
+      { variantImages: true; variantTags: true }
+    >;
+
+    // Example 2: **Products with Variants**
+    // - Query `products` with its related `productVariants`.
+    export type ProductsWithVariants = InferResultType<
+      "products",
+      { productVariants: true }
+    >;
+
+    // Example 3: **Variants with Images, Tags, and Product**
+    // - Query `productVariants` with `variantImages`, `variantTags`, and `products`.
+    export type VariantsWithProduct = InferResultType<
+      "productVariants",
+      {
+        variantImages: true;
+        variantTags: true;
+        products: true;
+      }
+    >;
+
+    // Example 4: **Reviews with User Information**
+    // - Query `reviews` with its related `user` data.
+    export type ReviewsWithUser = InferResultType<
+      "reviews",
+      { users: true }
+    >;
+
+    // Example 5: **OrderProduct with Nested Relations**
+    // - Query `orderProduct` with nested relations:
+      // - Orders with users.
+      // - Products.
+      // - ProductVariants with variantImages.
+    export type TotalOrders = InferResultType<
+      "orderProduct",
+      {
+        orders: { with: { users: true } };
+        products: true;
+        productVariants: { with: { variantImages: true } };
+      }
+    >;
+
+
+ * 
+ */

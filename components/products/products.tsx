@@ -18,6 +18,7 @@ export default function Products({ variants }: ProductTypes) {
 
   const filteredVariants = useMemo(() => {
     if (paramTag && variants) {
+      // return/filter variants which matches the tag with paramTag
       return variants.filter((variant) =>
         variant.variantTags.some((t) => t.tag === paramTag)
       );

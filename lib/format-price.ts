@@ -4,3 +4,5 @@ export default function formatPrice(price: number) {
     currency: "USD",
   }).format(price);
 }
+
+// Using JS date docs Intl.NumberFormat()
