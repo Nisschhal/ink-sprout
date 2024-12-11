@@ -1,4 +1,5 @@
 import Search from "@/components/products/algolia";
+import ProductTags from "@/components/products/product-tags";
 import Products from "@/components/products/products";
 import { db } from "@/server";
 
@@ -16,7 +17,8 @@ export default async function Home() {
 
   return (
     <main>
-      <Search />
+      <Search /> 
+      <ProductTags />
       <Products variants={productVariantsData} />
     </main>
   );

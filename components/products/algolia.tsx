@@ -6,13 +6,31 @@ import { searchClient } from "@/lib/algolia-client"; // The configured Algolia s
 import Link from "next/link"; // For client-side navigation.
 import Image from "next/image"; // Optimized image handling in Next.js.
 import { Card } from "../ui/card"; // Custom styled card component.
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function AlgoliaSearch() {
+  // Search Bar Active State
+  const [active, setActive] = useState(false);
+  // Create Memo motionCart
+  const MotionCard = useMemo(() => motion(Card), []);
   return (
-    <InstantSearchNext indexName="products" searchClient={searchClient}>
+    <InstantSearchNext
+      // According to docs, if any error when loading into another page or unmounted
+      future={{
+        persistHierarchicalRootCount: true,
+        preserveSharedStateOnUnmount: true,
+      }}
+      indexName="products"
+      searchClient={searchClient}
+    >
       {/* Search Box */}
       <div className="relative">
         <SearchBox
+          // When search bar is focused
+          onFocus={() => setActive(true)}
+          //  when search bar is not focused
+          onBlur={() => setActive(false)}
           placeholder="search product..." // Placeholder text in the search box.
           classNames={{
             input:
@@ -22,11 +40,20 @@ export default function AlgoliaSearch() {
             resetIcon: "hidden", // Hides the reset icon.
           }}
         />
-        {/* Card to contain the search results */}
-        <Card>
-          <Hits hitComponent={Hit} className="rounded-md" />{" "}
-          {/* Renders search results */}
-        </Card>
+        {/* Card to contain the search results when active is true */}
+        <AnimatePresence>
+          {active && (
+            <MotionCard
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="absolute w-full mt-2  max-h-96 overflow-y-auto "
+            >
+              <Hits hitComponent={Hit} className="rounded-md" />
+              {/* Renders search results */}
+            </MotionCard>
+          )}
+        </AnimatePresence>
       </div>
     </InstantSearchNext>
   );
@@ -60,14 +87,6 @@ function Hit({
     };
   };
 }) {
-  // If the search query doesn't match either the title or product type, skip this result.
-  if (
-    hit._highlightResult.title.matchLevel === "none" &&
-    hit._highlightResult.productType.matchLevel === "none"
-  ) {
-    return null;
-  }
-
   return (
     <div className="p-2 mb-4 hover:bg-secondary">
       {/* Navigates to a product detail page with query parameters */}
